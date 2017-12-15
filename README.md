@@ -2,6 +2,7 @@
 Java library that provides tools for audio recording and playback.
 
 0.9 -> Funcionally version
+
 0.9.1-1b -> - The Speaker and Microphone class was modified by changing the form
 to instantiate objects.
 
