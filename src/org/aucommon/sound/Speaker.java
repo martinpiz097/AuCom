@@ -17,8 +17,8 @@ import static org.aucommon.sound.AudioInfo.DEFAULT_FORMAT;
  * @author martin
  */
 public class Speaker extends AudioInterface {
-    private final SourceDataLine driver;
-    private final SourceDataLine.Info driverInfo;
+    private SourceDataLine driver;
+    private SourceDataLine.Info driverInfo;
 
     private AudioFormat format;
     
@@ -28,13 +28,19 @@ public class Speaker extends AudioInterface {
         driver = (SourceDataLine) AudioSystem.getLine(driverInfo);
     }
 
+    public Speaker(AudioFormat quality) throws LineUnavailableException {
+        configure(quality);
+    }
+
     public SourceDataLine getDriver() {
         return driver;
     }
     
     @Override
-    public void configure(AudioFormat quality){
+    public void configure(AudioFormat quality) throws LineUnavailableException {
         this.format = quality;
+        driverInfo = new DataLine.Info(SourceDataLine.class, format);
+        driver = (SourceDataLine) AudioSystem.getLine(driverInfo);
     }
 
     @Override
@@ -54,6 +60,8 @@ public class Speaker extends AudioInterface {
     }
     
     public void playAudio(byte[] audioBuff){
+        if(audioBuff == null)
+            return;
         driver.write(audioBuff, 0, audioBuff.length);
     }
     

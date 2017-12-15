@@ -16,7 +16,9 @@ public abstract class AudioInterface {
 
     public AudioInterface() {}
     
-    public abstract void configure(AudioFormat quality);
+    public AudioInterface(AudioFormat quality) {}
+    
+    public abstract void configure(AudioFormat format) throws LineUnavailableException;
     public abstract boolean isOpen();
     public abstract void open() throws LineUnavailableException;
     public abstract void stop();

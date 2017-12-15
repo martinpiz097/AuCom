@@ -18,9 +18,12 @@ import static org.aucommon.sound.AudioInfo.DEFAULT_FORMAT;
  * @author martin
  */
 public class Microphone extends AudioInterface{
-    private final TargetDataLine driver;
-    private final TargetDataLine.Info driverInfo;
+    private TargetDataLine driver;
+    private TargetDataLine.Info driverInfo;
     
+    // Añadir mas adelante un buffer para almacenar el audio y desde ahi
+    // rescatar bytes y reemplazar metodo de grabacion por algo mas completo
+    // como por ejemplo si quiero grabar en au hacerlo con el otro metodo
     private AudioFormat format;
     
     public Microphone() throws LineUnavailableException {
@@ -28,13 +31,19 @@ public class Microphone extends AudioInterface{
         driver = (TargetDataLine) AudioSystem.getLine(driverInfo);
     }
 
+    public Microphone(AudioFormat quality) throws LineUnavailableException {
+        configure(quality);
+    }
+    
     public TargetDataLine getDriver() {
         return driver;
     }
 
     @Override
-    public void configure(AudioFormat quality){
-        this.format = quality;
+    public void configure(AudioFormat format) throws LineUnavailableException{
+        this.format = format;
+        driverInfo = new DataLine.Info(TargetDataLine.class, format);
+        driver = (TargetDataLine) AudioSystem.getLine(driverInfo);
     }
     
     @Override
@@ -57,8 +66,6 @@ public class Microphone extends AudioInterface{
         // available va aumentando hasta llegar al limite del buffer
         // no sirve para saber cuantos bytes quedan por leer
         
-        byte[] audioBuff = new byte[BUFF_SIZE];
-        driver.read(audioBuff, 0, BUFF_SIZE);
         //System.out.println("Available: "+driver.available());
         //System.out.println(Arrays.toString(audioBuff));
 //        int zeroCount = 0;
@@ -76,6 +83,12 @@ public class Microphone extends AudioInterface{
 //            }
 //        }).start();
         //return AudioManager.getAudioCleaned(audioBuff);
+        return readAudio(BUFF_SIZE);
+    }
+    
+    public byte[] readAudio(int len){
+        byte[] audioBuff = new byte[len];
+        driver.read(audioBuff, 0, len);
         return audioBuff;
     }
     

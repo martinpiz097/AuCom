@@ -3,9 +3,14 @@
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group name="Suncalls">
+            <file>file:/home/martin/Dropbox/Java/Proyectos/NetBeansProjects/AudioCommon/src/org/aucommon/io/ByteBuffer.java</file>
             <file>file:/home/martin/Dropbox/Java/Proyectos/NetBeansProjects/AudioCommon/src/org/aucommon/sound/AudioInfo.java</file>
             <file>file:/home/martin/Dropbox/Java/Proyectos/NetBeansProjects/AudioCommon/src/org/aucommon/sound/AudioQuality.java</file>
             <file>file:/home/martin/Dropbox/Java/Proyectos/NetBeansProjects/AudioCommon/src/org/aucommon/sound/Speaker.java</file>
+            <file>file:/home/martin/Dropbox/Java/Proyectos/NetBeansProjects/AudioCommon/test/org/aucommon/test/TestAUFormat.java</file>
+            <file>file:/home/martin/Dropbox/Java/Proyectos/NetBeansProjects/AudioCommon/test/org/aucommon/test/Main.java</file>
+            <file>file:/home/martin/Dropbox/Java/Proyectos/NetBeansProjects/AudioCommon/src/org/aucommon/io/ElectroOutputStream.java</file>
+            <file>file:/home/martin/Dropbox/Java/Proyectos/NetBeansProjects/AudioCommon/src/org/aucommon/io/ElectroInputStream.java</file>
             <file>file:/home/martin/Dropbox/Java/Proyectos/NetBeansProjects/AudioCommon/src/org/aucommon/sound/Microphone.java</file>
         </group>
     </open-files>
