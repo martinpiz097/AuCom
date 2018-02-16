@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package org.aucommon.sound;
+package org.aucom.sound;
 
 import javax.sound.sampled.AudioFormat;
 import javax.sound.sampled.LineUnavailableException;
@@ -20,6 +20,7 @@ public abstract class AudioInterface {
     
     public abstract void configure(AudioFormat format) throws LineUnavailableException;
     public abstract boolean isOpen();
+    public abstract AudioFormat getFormat();
     public abstract void open() throws LineUnavailableException;
     public abstract void stop();
 }

@@ -11,7 +11,7 @@ import javax.sound.sampled.DataLine;
 import javax.sound.sampled.LineUnavailableException;
 import javax.sound.sampled.SourceDataLine;
 import javax.sound.sampled.TargetDataLine;
-import org.aucommon.sound.AudioQuality;
+import org.aucom.sound.AudioQuality;
 
 /**
  *

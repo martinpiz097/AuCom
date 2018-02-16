@@ -3,14 +3,14 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package org.aucommon.sound;
+package org.aucom.sound;
 
 import javax.sound.sampled.AudioFormat;
 import javax.sound.sampled.AudioSystem;
 import javax.sound.sampled.DataLine;
 import javax.sound.sampled.LineUnavailableException;
 import javax.sound.sampled.SourceDataLine;
-import static org.aucommon.sound.AudioInfo.DEFAULT_FORMAT;
+import static org.aucom.sound.AudioInfo.DEFAULT_FORMAT;
 
 /**
  *
@@ -20,7 +20,6 @@ public class Speaker extends AudioInterface {
     private SourceDataLine driver;
     private SourceDataLine.Info driverInfo;
 
-    private AudioFormat format;
     
     public Speaker() throws LineUnavailableException {
         super();
@@ -31,15 +30,24 @@ public class Speaker extends AudioInterface {
     public Speaker(AudioFormat quality) throws LineUnavailableException {
         configure(quality);
     }
+    
+    // Experimental
+    public Speaker(SourceDataLine driver) {
+        super(driver.getFormat());
+        this.driver = driver;
+    }
 
     public SourceDataLine getDriver() {
         return driver;
     }
+
+    public void setDriver(SourceDataLine driver){
+        this.driver = driver;
+    }
     
     @Override
     public void configure(AudioFormat quality) throws LineUnavailableException {
-        this.format = quality;
-        driverInfo = new DataLine.Info(SourceDataLine.class, format);
+        driverInfo = new DataLine.Info(SourceDataLine.class, quality);
         driver = (SourceDataLine) AudioSystem.getLine(driverInfo);
     }
 
@@ -48,8 +56,13 @@ public class Speaker extends AudioInterface {
         return driver.isOpen();
     }
     
+    public AudioFormat getFormat(){
+        return driver.getFormat();
+    }
+    
     @Override
     public void open() throws LineUnavailableException{
+        AudioFormat format = driver.getFormat();
         driver.open(format == null ? DEFAULT_FORMAT : format);
         driver.start();
     }
@@ -63,6 +76,14 @@ public class Speaker extends AudioInterface {
         if(audioBuff == null)
             return;
         driver.write(audioBuff, 0, audioBuff.length);
+    }
+    
+    public void playAudio(byte[] audioBuff, int len){
+        if (audioBuff == null)
+            return;
+        if (len > audioBuff.length)
+            len = audioBuff.length;
+        driver.write(audioBuff, 0, len);
     }
     
 }

@@ -3,10 +3,9 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package org.aucommon.io;
+package org.aucom.io;
 
 import java.io.Serializable;
-import java.util.Arrays;
 import java.util.RandomAccess;
 import java.util.function.Predicate;
 
@@ -21,6 +20,8 @@ public class ByteBuffer implements RandomAccess, Cloneable, Serializable {
     
     private static final int DEFAULT_CAPACITY = 1024;
     private static final int MAX_ARRAY_SIZE = Integer.MAX_VALUE-8;
+    
+    private static final int MAX_CAPACITY = 1024*1024*50;
     
     public ByteBuffer() {
         this(DEFAULT_CAPACITY);
@@ -53,8 +54,11 @@ public class ByteBuffer implements RandomAccess, Cloneable, Serializable {
         if (newCapacity - minCapacity < 0)
             newCapacity = minCapacity;
         if (newCapacity - MAX_ARRAY_SIZE > 0)
-            newCapacity = Integer.MAX_VALUE;
-        array = Arrays.copyOf(array, newCapacity);
+            newCapacity = MAX_ARRAY_SIZE;
+        //array = Arrays.copyOf(array, newCapacity);
+        byte[] newArray = new byte[newCapacity];
+        System.arraycopy(array, 0, newArray, 0, size);
+        array = newArray;
         capacity = newCapacity;
     }
 
@@ -70,13 +74,13 @@ public class ByteBuffer implements RandomAccess, Cloneable, Serializable {
             grow(minCapacity);
     }
     
-    private static int hugeCapacity(int minCapacity) {
-        if (minCapacity < 0) // overflow
-            throw new OutOfMemoryError();
-        return (minCapacity > MAX_ARRAY_SIZE) ?
-            Integer.MAX_VALUE :
-            MAX_ARRAY_SIZE;
-    }
+//    private static int hugeCapacity(int minCapacity) {
+//        if (minCapacity < 0) // overflow
+//            throw new OutOfMemoryError();
+//        return (minCapacity > MAX_ARRAY_SIZE) ?
+//            MAX_ARRAY_SIZE :
+//            minCapacity;
+//    }
     
     private void checkIndex(int index){
         if(index >= size || index < 0)
@@ -103,8 +107,26 @@ public class ByteBuffer implements RandomAccess, Cloneable, Serializable {
         return false;
     }
     
+    public void cut(int index){
+        if (index == size) {
+            clear();
+            return;
+        }
+        
+        ByteBuffer buff = new ByteBuffer(new byte[1024]);
+        for (int i = index; i < size; i++)
+            buff.add(array[i]);
+        array = buff.array;
+        capacity = array.length;
+        size-=index;
+    }
+    
     public int size() {
         return size;
+    }
+    
+    public int getCapacity(){
+        return capacity;
     }
 
     public boolean isEmpty() {
@@ -132,6 +154,8 @@ public class ByteBuffer implements RandomAccess, Cloneable, Serializable {
         for (int i = end+1; i < size; i++)
             newBuff.add(array[i]);
         array = newBuff.array;
+        size = newBuff.size;
+        capacity = array.length;
     }
     
     public int read(byte[] b, int off, int len){
@@ -139,34 +163,54 @@ public class ByteBuffer implements RandomAccess, Cloneable, Serializable {
 //            throw new IndexOutOfBoundsException();
         if (len > b.length)
             len = b.length;
-        for (int i = 0; i < len; i++)
+        int maxIndex = off;
+        for (int i = 0; i < len; i++) {
             b[i] = array[i+off];
-        return len-off;
+            maxIndex++;
+        }
+        int retur = capacity >= MAX_CAPACITY ? -2 : len-off;
+        if (retur == -2)
+            removeAt(0, maxIndex);
+        return retur;
     }
     
-    public int read(byte[] b, int len){
-        if (len > array.length)
-            len = array.length;
-        System.arraycopy(array, 0, b, 0, len);
-        return len;
-    }
+//    public int read(byte[] b, int len){
+//        if (len > array.length)
+//            len = array.length;
+//        System.arraycopy(array, 0, b, 0, len);
+//        return len;
+//    }
     
-    public byte[] getArray(){
+    public byte[] getRawArray(){
         return array;
     }
     
-    public boolean add(byte e) {
+    // Podria ser add(Number e) pero este metodo tiene la necesidad de
+    // crear un nuevo objeto para recien rescatar el valor a agregar
+    
+    public void add(byte e) {
         ensureCapacity(size+1);
-        array[size] = e;
-        size++;
+        array[size++] = e;
         //checkMemory();
-        return true;
+    }
+    
+    public void add(int e){
+        add((byte)e);
+    }
+    
+    public void addFrom(byte[] array){
+        addFrom(array, 0, array.length);
+    }
+    
+    public void addFrom(byte[] array, int off, int len){
+        for (int i = off; i < len; i++)
+            add(array[i]);
     }
 
     public void clear() {
         array = null;
         array = new byte[DEFAULT_CAPACITY];
-        size = 0;
+        size = capacity = 0;
     }
 
     /**
@@ -183,10 +227,15 @@ public class ByteBuffer implements RandomAccess, Cloneable, Serializable {
     public byte pollFirst(){
         checkIndex(0);
         byte b = array[0];
-        byte[] newarray = new byte[array.length];
-        for (int i = 1; i < size; i++) {
-            newarray[i-1] = array[i];
-        }
+//        byte[] newarray = new byte[array.length];
+//        for (int i = 1; i < size; i++) {
+//            newarray[i-1] = array[i];
+//        }
+        ByteBuffer buff = new ByteBuffer(new byte[array.length]);
+        buff.addFrom(array, 1, size);
+        array = buff.array;
+        capacity = array.length;
+        size -= 1;
         return b;
     }
     

@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package org.aucommon.sound;
+package org.aucom.sound;
 
 import javax.sound.sampled.AudioFormat;
 
@@ -21,4 +21,8 @@ public class AudioQuality {
             AudioFormat.Encoding.PCM_SIGNED, 11025.0f, 8, 1, 1, 11025.0f, false);
     public static final AudioFormat POOR = new AudioFormat(
             AudioFormat.Encoding.PCM_SIGNED, 8820.0f, 8, 1, 1, 8820.0f, false);
+    public static final AudioFormat VOICE = new AudioFormat(
+            AudioFormat.Encoding.PCM_SIGNED, 8000.0f, 16, 1, 2, 8000.0f, false);
+    public static final AudioFormat VERY_POOR = new AudioFormat(
+            AudioFormat.Encoding.PCM_SIGNED, 7350.0f, 16, 1, 2, 7350.0f, false);
 }

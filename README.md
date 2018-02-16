@@ -1,10 +1,12 @@
 # AudioCommon
 Java library that provides tools for audio recording and playback.
 
-0.9 -> Funcionally version
+0.9
+	Funcionally version
 
-0.9.1-1b -> - The Speaker and Microphone class was modified by changing the form
-to instantiate objects.
+0.9.1-1b 
+	- The Speaker and Microphone class was modified by changing the form
+	to instantiate objects.
 
 	- The readAudio (int len) method was added in the Microphone class.
 
@@ -18,3 +20,4 @@ to instantiate objects.
 	- More audio tests were made.
 
 	- It is desired to implement a voice compression method.
+0.9.1-1 - Omission of experimental methods and classes

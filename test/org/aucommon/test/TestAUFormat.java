@@ -10,10 +10,8 @@ import java.io.IOException;
 import java.io.PipedInputStream;
 import java.io.PipedOutputStream;
 import static java.lang.Thread.MIN_PRIORITY;
-import java.net.Socket;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.nio.file.StandardOpenOption;
 import static java.nio.file.StandardOpenOption.APPEND;
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
@@ -27,10 +25,10 @@ import javax.sound.sampled.AudioInputStream;
 import javax.sound.sampled.AudioSystem;
 import javax.sound.sampled.LineUnavailableException;
 import javax.sound.sampled.TargetDataLine;
-import org.aucommon.io.ByteBuffer;
-import org.aucommon.sound.AudioQuality;
-import org.aucommon.sound.Microphone;
-import org.aucommon.sound.Speaker;
+import org.aucom.io.ByteBuffer;
+import org.aucom.sound.AudioQuality;
+import org.aucom.sound.Microphone;
+import org.aucom.sound.Speaker;
 
 /**
  *
