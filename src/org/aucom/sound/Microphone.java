@@ -25,9 +25,9 @@ public class Microphone extends AudioInterface{
     // rescatar bytes y reemplazar metodo de grabacion por algo mas completo
     // como por ejemplo si quiero grabar en au hacerlo con el otro metodo
 
-    public static enum COMPRESS_TYPE{
-        NONE, OMEGA;
-    }
+//    public static enum COMPRESS_TYPE{
+//        NONE, OMEGA;
+//    }
     
     public Microphone() throws LineUnavailableException {
         driverInfo = new DataLine.Info(TargetDataLine.class, DEFAULT_FORMAT);
@@ -69,7 +69,7 @@ public class Microphone extends AudioInterface{
     
     @Override
     public void open() throws LineUnavailableException {
-        AudioFormat format = driver.getFormat();
+        AudioFormat format = driver == null ? null : driver.getFormat();
         driver.open(format == null ? DEFAULT_FORMAT : format);
         driver.start();
     }
@@ -77,6 +77,12 @@ public class Microphone extends AudioInterface{
     @Override
     public void stop(){
         driver.stop();
+    }
+    
+    public void reopen() throws LineUnavailableException{
+        if (driver.isOpen())
+            driver.stop();
+        open();
     }
     
     public byte[] readAudio(){
