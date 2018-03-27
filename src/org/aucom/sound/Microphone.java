@@ -6,6 +6,7 @@
 package org.aucom.sound;
 
 import javax.sound.sampled.AudioFormat;
+import javax.sound.sampled.AudioInputStream;
 import javax.sound.sampled.AudioSystem;
 import javax.sound.sampled.DataLine;
 import javax.sound.sampled.LineUnavailableException;
@@ -52,6 +53,10 @@ public class Microphone extends AudioInterface{
         this.driver = driver;
     }
 
+    public AudioInputStream getInputStream() {
+        return new AudioInputStream(driver);
+    }
+    
     @Override
     public void configure(AudioFormat format) throws LineUnavailableException{
         driverInfo = new DataLine.Info(TargetDataLine.class, format);
@@ -77,6 +82,11 @@ public class Microphone extends AudioInterface{
     @Override
     public void stop(){
         driver.stop();
+    }
+    
+    @Override
+    public void close(){
+        driver.close();
     }
     
     public void reopen() throws LineUnavailableException{

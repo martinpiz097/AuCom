@@ -6,6 +6,8 @@
 package org.aucom.io;
 
 import java.io.Serializable;
+import java.util.Arrays;
+import java.util.LinkedList;
 import java.util.RandomAccess;
 import java.util.function.Predicate;
 
@@ -23,6 +25,8 @@ public class ByteBuffer implements RandomAccess, Cloneable, Serializable {
     
     private static final int MAX_CAPACITY = 1024*1024*50;
     
+    private static final long serialVersionUID = 100L;
+    
     public ByteBuffer() {
         this(DEFAULT_CAPACITY);
     }
@@ -39,6 +43,12 @@ public class ByteBuffer implements RandomAccess, Cloneable, Serializable {
     public ByteBuffer(byte[] array) {
         this.array = array;
         this.size = this.capacity = array.length;
+    }
+    
+    public ByteBuffer(byte[] array, int start, int end) {
+        this.array = new byte[end-start];
+        capacity = array.length;
+        addFrom(array, start, end);
     }
     
     private void updateCapacity(){
@@ -173,6 +183,24 @@ public class ByteBuffer implements RandomAccess, Cloneable, Serializable {
             removeAt(0, maxIndex);
         return retur;
     }
+
+    public byte[] read(int start, int len) {
+        if (size-start < len)
+            len = size-start;
+        ByteBuffer buffer = new ByteBuffer();
+        for (int i = start; i < len; i++)
+            buffer.add(array[i]);
+        return buffer.toArray();
+    }
+    
+    public byte[] read(int start) {
+        if (start < 0 || start >= size)
+            return null;
+        ByteBuffer buff = new ByteBuffer();
+        for (int i = start; i < size; i++)
+            buff.add(array[i]);
+        return buff.toArray();
+    }
     
 //    public int read(byte[] b, int len){
 //        if (len > array.length)
@@ -183,6 +211,31 @@ public class ByteBuffer implements RandomAccess, Cloneable, Serializable {
     
     public byte[] getRawArray(){
         return array;
+    }
+    
+    public LinkedList<ByteBuffer> divide(int divitionSize) {
+        LinkedList<ByteBuffer> listBuffers = new LinkedList<>();
+        ByteBuffer buff = new ByteBuffer();
+        boolean added = false;
+        
+        for (int i = 0; i < size; i++) {
+            added = false;
+            if (i >= divitionSize && (i % divitionSize) == 0) {
+                listBuffers.add(buff);
+                added = true;
+                buff = new ByteBuffer();
+                if (i == size-1)
+                    added = false;
+            }
+            buff.add(array[i]);
+        }
+        if (!added)
+            listBuffers.add(buff);
+//        System.out.println("Cantidad de buffers: "+listBuffers.size());
+//        for (ByteBuffer buffer : listBuffers) {
+//            System.out.println(buffer.toString());
+//        }
+        return listBuffers;
     }
     
     // Podria ser add(Number e) pero este metodo tiene la necesidad de
@@ -202,8 +255,16 @@ public class ByteBuffer implements RandomAccess, Cloneable, Serializable {
         addFrom(array, 0, array.length);
     }
     
-    public void addFrom(byte[] array, int off, int len){
-        for (int i = off; i < len; i++)
+    public void addFrom(ByteBuffer buffer) {
+        addFrom(buffer.toArray());
+    }
+    
+    public void addFrom(ByteBuffer buffer, int start, int len) {
+        addFrom(buffer.toArray(), start, len);
+    }
+    
+    public void addFrom(byte[] array, int start, int end){
+        for (int i = start; i < end; i++)
             add(array[i]);
     }
 
@@ -260,6 +321,11 @@ public class ByteBuffer implements RandomAccess, Cloneable, Serializable {
         byte e = get(index);
         array[index] = element;
         return e;
+    }
+
+    @Override
+    public String toString() {
+        return Arrays.toString(toArray());
     }
     
 }

@@ -23,4 +23,5 @@ public abstract class AudioInterface {
     public abstract AudioFormat getFormat();
     public abstract void open() throws LineUnavailableException;
     public abstract void stop();
+    public abstract void close();
 }

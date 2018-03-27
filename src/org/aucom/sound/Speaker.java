@@ -8,6 +8,8 @@ package org.aucom.sound;
 import javax.sound.sampled.AudioFormat;
 import javax.sound.sampled.AudioSystem;
 import javax.sound.sampled.DataLine;
+import javax.sound.sampled.FloatControl;
+import javax.sound.sampled.FloatControl.Type;
 import javax.sound.sampled.LineUnavailableException;
 import javax.sound.sampled.SourceDataLine;
 import static org.aucom.sound.AudioInfo.DEFAULT_FORMAT;
@@ -41,6 +43,11 @@ public class Speaker extends AudioInterface {
         return driver;
     }
 
+    public void setGain(float gain){
+        FloatControl control = (FloatControl) driver.getControl(Type.MASTER_GAIN);
+        control.setValue(gain);
+    }
+    
     public void setDriver(SourceDataLine driver){
         this.driver = driver;
     }
@@ -70,6 +77,11 @@ public class Speaker extends AudioInterface {
     @Override
     public void stop(){
         driver.stop();
+    }
+    
+    @Override
+    public void close(){
+        driver.close();
     }
     
     public void playAudio(byte[] audioBuff){
