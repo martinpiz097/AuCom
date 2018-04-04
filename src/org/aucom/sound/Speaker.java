@@ -97,5 +97,5 @@ public class Speaker extends AudioInterface {
             len = audioBuff.length;
         driver.write(audioBuff, 0, len);
     }
-    
+
 }
