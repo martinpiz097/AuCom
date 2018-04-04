@@ -24,3 +24,4 @@ Java library that provides tools for audio recording and playback.
 
 0.9.2	- Close and setGain methods in the Speaker class.
 	- Close and getInputStream method added to Microphone class.
+0.9.3 	- Set open methods
