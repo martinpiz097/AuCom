@@ -48,9 +48,9 @@ public class Microphone extends AudioInterface{
     public TargetDataLine getDriver() {
         return driver;
     }
-    
     public void setDriver(TargetDataLine driver){
-        this.driver = driver;
+        if (driver != null)
+            this.driver = driver;
     }
 
     public AudioInputStream getInputStream() {
@@ -74,7 +74,8 @@ public class Microphone extends AudioInterface{
     
     @Override
     public void open() throws LineUnavailableException {
-        AudioFormat format = driver == null ? null : driver.getFormat();
+        //AudioFormat format = driver == null ? null : driver.getFormat();
+        AudioFormat format = driver.getFormat();
         driver.open(format == null ? DEFAULT_FORMAT : format);
         driver.start();
     }

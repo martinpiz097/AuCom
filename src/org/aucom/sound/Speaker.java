@@ -10,6 +10,7 @@ import javax.sound.sampled.AudioSystem;
 import javax.sound.sampled.DataLine;
 import javax.sound.sampled.FloatControl;
 import javax.sound.sampled.FloatControl.Type;
+import javax.sound.sampled.Line;
 import javax.sound.sampled.LineUnavailableException;
 import javax.sound.sampled.SourceDataLine;
 import static org.aucom.sound.AudioInfo.DEFAULT_FORMAT;
@@ -49,7 +50,8 @@ public class Speaker extends AudioInterface {
     }
     
     public void setDriver(SourceDataLine driver){
-        this.driver = driver;
+        if (driver != null)
+            this.driver = driver;
     }
     
     @Override
