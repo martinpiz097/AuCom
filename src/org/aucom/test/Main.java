@@ -4,7 +4,10 @@
  * and open the template in the editor.
  */
 package org.aucom.test;
+import java.io.File;
 import java.io.IOException;
+import javafx.scene.media.Media;
+import javafx.scene.media.MediaPlayer;
 import javax.sound.sampled.LineUnavailableException;
 import org.aucom.sound.AudioQuality;
 import org.aucom.sound.Microphone;
@@ -16,7 +19,12 @@ import org.aucom.sound.Speaker;
  */
 public class Main {
     public static void main(String[] args) throws LineUnavailableException, IOException {
-        Microphone micro = new Microphone(AudioQuality.HIGH);
+        File sound = new File("/home/martin/AudioTesting/music/John Petrucci/" +
+                "When_The_Keyboard_Breaks_Live_In_Chicago/Universal_Mind.m4a");
+        Media song = new Media(sound.toURI().toString());
+        MediaPlayer player = new MediaPlayer(song);
+        player.play();
+        /*Microphone micro = new Microphone(AudioQuality.HIGH);
         Speaker speaker = new Speaker(AudioQuality.HIGH);
         micro.open();speaker.open();
         
@@ -36,7 +44,7 @@ public class Main {
 //            list.add(micro.readAudio(32));
 //        
 //        for (byte[] buffer : list)
-//            System.out.println(Arrays.toString(buffer));
+//            System.out.println(Arrays.toString(buffer));*/
     }
 
 }

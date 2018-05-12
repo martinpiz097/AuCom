@@ -18,11 +18,12 @@
             <file>file:/home/martin/Dropbox/Java/Proyectos/NetBeansProjects/AuCom/src/org/aucom/sound/Microphone.java</file>
             <file>file:/home/martin/Dropbox/Java/Proyectos/NetBeansProjects/AuCom/src/org/aucom/sound/AudioInfo.java</file>
         </group>
+        <group name="VIDEOS"/>
         <group name="PLAYER">
+            <file>file:/home/martin/Dropbox/Java/Proyectos/NetBeansProjects/AuCom/src/org/aucom/test/Main.java</file>
             <file>file:/home/martin/Dropbox/Java/Proyectos/NetBeansProjects/AuCom/src/org/aucom/sound/Speaker.java</file>
             <file>file:/home/martin/Dropbox/Java/Proyectos/NetBeansProjects/AuCom/src/org/aucom/sound/AudioQuality.java</file>
             <file>file:/home/martin/Dropbox/Java/Proyectos/NetBeansProjects/AuCom/src/org/aucom/io/ByteBuffer.java</file>
         </group>
-        <group name="VIDEOS"/>
     </open-files>
 </project-private>

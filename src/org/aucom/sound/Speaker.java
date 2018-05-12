@@ -10,7 +10,6 @@ import javax.sound.sampled.AudioSystem;
 import javax.sound.sampled.DataLine;
 import javax.sound.sampled.FloatControl;
 import javax.sound.sampled.FloatControl.Type;
-import javax.sound.sampled.Line;
 import javax.sound.sampled.LineUnavailableException;
 import javax.sound.sampled.SourceDataLine;
 import static org.aucom.sound.AudioInfo.DEFAULT_FORMAT;
@@ -69,8 +68,12 @@ public class Speaker extends AudioInterface {
         return driver.getFormat();
     }
     
+    public FloatControl getControl(FloatControl.Type type) {
+        return (FloatControl) driver.getControl(type);
+    }
+    
     @Override
-    public void open() throws LineUnavailableException{
+    public void open() throws LineUnavailableException {
         AudioFormat format = driver.getFormat();
         driver.open(format == null ? DEFAULT_FORMAT : format);
         driver.start();

@@ -9,6 +9,7 @@ import javax.sound.sampled.AudioFormat;
 import javax.sound.sampled.AudioInputStream;
 import javax.sound.sampled.AudioSystem;
 import javax.sound.sampled.DataLine;
+import javax.sound.sampled.FloatControl;
 import javax.sound.sampled.LineUnavailableException;
 import javax.sound.sampled.TargetDataLine;
 import static org.aucom.sound.AudioInfo.BUFF_SIZE;
@@ -70,6 +71,10 @@ public class Microphone extends AudioInterface{
     
     public AudioFormat getFormat(){
         return driver.getFormat();
+    }
+    
+    public FloatControl getControl(FloatControl.Type type) {
+         return (FloatControl) driver.getControl(type);
     }
     
     @Override
