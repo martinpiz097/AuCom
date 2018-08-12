@@ -5,6 +5,8 @@
  */
 package org.aucom.io;
 
+import org.bytebuffer.ByteBuffer;
+
 /**
  *
  * @author martin

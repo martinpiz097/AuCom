@@ -20,8 +20,8 @@ import static org.aucom.sound.AudioInfo.DEFAULT_FORMAT;
  * @author martin
  */
 public class Microphone extends AudioInterface{
-    private TargetDataLine driver;
-    private TargetDataLine.Info driverInfo;
+    private volatile TargetDataLine driver;
+    private volatile TargetDataLine.Info driverInfo;
     
     // Añadir mas adelante un buffer para almacenar el audio y desde ahi
     // rescatar bytes y reemplazar metodo de grabacion por algo mas completo
@@ -46,9 +46,10 @@ public class Microphone extends AudioInterface{
         this.driver = driver;
     }
 
-    public TargetDataLine getDriver() {
+    public synchronized TargetDataLine getDriver() {
         return driver;
     }
+
     public void setDriver(TargetDataLine driver){
         if (driver != null)
             this.driver = driver;
@@ -59,26 +60,26 @@ public class Microphone extends AudioInterface{
     }
     
     @Override
-    public void configure(AudioFormat format) throws LineUnavailableException{
+    public synchronized void configure(AudioFormat format) throws LineUnavailableException{
         driverInfo = new DataLine.Info(TargetDataLine.class, format);
         driver = (TargetDataLine) AudioSystem.getLine(driverInfo);
     }
     
     @Override
-    public boolean isOpen(){
+    public synchronized boolean isOpen(){
         return driver.isOpen();
     }
     
-    public AudioFormat getFormat(){
+    public synchronized AudioFormat getFormat(){
         return driver.getFormat();
     }
     
-    public FloatControl getControl(FloatControl.Type type) {
+    public synchronized FloatControl getControl(FloatControl.Type type) {
          return (FloatControl) driver.getControl(type);
     }
     
     @Override
-    public void open() throws LineUnavailableException {
+    public synchronized void open() throws LineUnavailableException {
         //AudioFormat format = driver == null ? null : driver.getFormat();
         AudioFormat format = driver.getFormat();
         driver.open(format == null ? DEFAULT_FORMAT : format);
@@ -86,16 +87,16 @@ public class Microphone extends AudioInterface{
     }
     
     @Override
-    public void stop(){
+    public synchronized void stop(){
         driver.stop();
     }
     
     @Override
-    public void close(){
+    public synchronized void close(){
         driver.close();
     }
     
-    public void reopen() throws LineUnavailableException{
+    public synchronized void reopen() throws LineUnavailableException{
         if (driver.isOpen())
             driver.stop();
         open();
@@ -168,5 +169,26 @@ public class Microphone extends AudioInterface{
 //        }
 //        return buffer.toArray();
 //    }
+    
+    /*public static void main(String[] args) throws LineUnavailableException {
+        Microphone micro = new Microphone(AudioQuality.NORMAL);
+        Speaker sp = new Speaker(micro.getFormat());
+        micro.open();sp.open();
+        FloatControl gain = sp.getControl(FloatControl.Type.MASTER_GAIN);
+        System.out.println("Minimum: "+gain.getMinimum());
+        System.out.println("Maximum: "+gain.getMaximum());
+        System.out.println("Units: "+gain.getUnits());
+        System.out.println("MinLabel: "+gain.getMinLabel());
+        System.out.println("MidLabel: "+gain.getMidLabel());
+        System.out.println("MaxLabel: "+gain.getMaxLabel());
+        System.out.println("Precision: "+gain.getPrecision());
+        System.out.println("UpdatePeriod: "+gain.getUpdatePeriod());
+        System.out.println("Value: "+gain.getValue());
+        try {
+            sp.getControl(FloatControl.Type.AUX_RETURN);
+        } catch (IllegalArgumentException e) {
+            System.out.println("IllegalArgument");
+        }
+    }*/
     
 }

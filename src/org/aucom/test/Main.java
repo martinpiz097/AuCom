@@ -19,24 +19,24 @@ import org.aucom.sound.Speaker;
  */
 public class Main {
     public static void main(String[] args) throws LineUnavailableException, IOException {
-        File sound = new File("/home/martin/AudioTesting/music/John Petrucci/" +
-                "When_The_Keyboard_Breaks_Live_In_Chicago/Universal_Mind.m4a");
+        /*File sound = new File("/home/martin/AudioTesting/audio2/au.mp3");
         Media song = new Media(sound.toURI().toString());
         MediaPlayer player = new MediaPlayer(song);
-        player.play();
-        /*Microphone micro = new Microphone(AudioQuality.HIGH);
-        Speaker speaker = new Speaker(AudioQuality.HIGH);
-        micro.open();speaker.open();
-        
+        player.play();*/
+        Microphone micro = new Microphone(AudioQuality.VOICE);
+        Speaker speaker = new Speaker(AudioQuality.VOICE);
+        micro.open();
+        speaker.open();
+
+        while (true)
+            speaker.playAudio(micro.readAudio());
+
 //        AudioInputStream ais = micro.getInputStream();
 //        File fSound = new File("/home/martin/AudioTesting/voice.wav");
 //        fSound.createNewFile();
 //        AudioSystem.write(ais, AudioFileFormat.Type.WAVE, fSound);
 //        System.out.println("Despues de write");
 
-        while (true)
-            speaker.playAudio(micro.readAudio());
-        
 //        long time = System.currentTimeMillis();
 //        LinkedList<byte[]> list = new LinkedList<>();
 //        

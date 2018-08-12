@@ -19,8 +19,8 @@ import static org.aucom.sound.AudioInfo.DEFAULT_FORMAT;
  * @author martin
  */
 public class Speaker extends AudioInterface {
-    private SourceDataLine driver;
-    private SourceDataLine.Info driverInfo;
+    private volatile SourceDataLine driver;
+    private volatile SourceDataLine.Info driverInfo;
 
     
     public Speaker() throws LineUnavailableException {
@@ -39,12 +39,12 @@ public class Speaker extends AudioInterface {
         this.driver = driver;
     }
 
-    public SourceDataLine getDriver() {
+    public synchronized SourceDataLine getDriver() {
         return driver;
     }
 
     public void setGain(float gain){
-        FloatControl control = (FloatControl) driver.getControl(Type.MASTER_GAIN);
+        FloatControl control = getControl(Type.MASTER_GAIN);
         control.setValue(gain);
     }
     
@@ -54,38 +54,50 @@ public class Speaker extends AudioInterface {
     }
     
     @Override
-    public void configure(AudioFormat quality) throws LineUnavailableException {
+    public synchronized void configure(AudioFormat quality) throws LineUnavailableException {
         driverInfo = new DataLine.Info(SourceDataLine.class, quality);
         driver = (SourceDataLine) AudioSystem.getLine(driverInfo);
     }
 
     @Override
-    public boolean isOpen(){
+    public synchronized boolean isOpen(){
         return driver.isOpen();
     }
     
-    public AudioFormat getFormat(){
+    public synchronized AudioFormat getFormat(){
         return driver.getFormat();
     }
     
-    public FloatControl getControl(FloatControl.Type type) {
-        return (FloatControl) driver.getControl(type);
+    /**
+     * Returns the specified control, but if this is'n incompatible
+     * this method returns null.
+     * @param type Control's type to call.
+     * @return The specified control or null if this method 
+     * throws an IllegalArgumentException internally.
+     */
+    public synchronized FloatControl getControl(FloatControl.Type type) {
+        try {
+            return (FloatControl) driver.getControl(type);
+        } catch (IllegalArgumentException e) {
+            return null;
+        }
+        
     }
     
     @Override
-    public void open() throws LineUnavailableException {
+    public synchronized void open() throws LineUnavailableException {
         AudioFormat format = driver.getFormat();
         driver.open(format == null ? DEFAULT_FORMAT : format);
         driver.start();
     }
 
     @Override
-    public void stop(){
+    public synchronized void stop(){
         driver.stop();
     }
     
     @Override
-    public void close(){
+    public synchronized void close(){
         driver.close();
     }
     
