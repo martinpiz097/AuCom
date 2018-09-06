@@ -1,9 +1,0 @@
-<component name="ArtifactManager">
-  <artifact type="jar" name="AuComMuPlayer">
-    <output-path>$PROJECT_DIR$/../OrangePlayerProject/MuPlayer/lib</output-path>
-    <root id="archive" name="AuComMuPlayer.jar">
-      <element id="module-output" name="AuCom" />
-      <element id="module-output" name="ByteBuffer" />
-    </root>
-  </artifact>
-</component>

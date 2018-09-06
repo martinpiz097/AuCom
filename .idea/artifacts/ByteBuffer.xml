@@ -1,8 +1,0 @@
-<component name="ArtifactManager">
-  <artifact type="jar" name="ByteBuffer">
-    <output-path>$PROJECT_DIR$/../ByteBuffer/</output-path>
-    <root id="archive" name="ByteBuffer.jar">
-      <element id="module-output" name="ByteBuffer" />
-    </root>
-  </artifact>
-</component>

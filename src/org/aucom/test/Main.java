@@ -4,14 +4,18 @@
  * and open the template in the editor.
  */
 package org.aucom.test;
-import java.io.File;
-import java.io.IOException;
-import javafx.scene.media.Media;
-import javafx.scene.media.MediaPlayer;
-import javax.sound.sampled.LineUnavailableException;
 import org.aucom.sound.AudioQuality;
 import org.aucom.sound.Microphone;
 import org.aucom.sound.Speaker;
+
+
+import static javax.sound.sampled.FloatControl.Type;
+
+import javax.sound.sampled.DataLine;
+import javax.sound.sampled.LineUnavailableException;
+import javax.sound.sampled.SourceDataLine;
+import javax.sound.sampled.TargetDataLine;
+import java.io.IOException;
 
 /**
  *
@@ -28,9 +32,39 @@ public class Main {
         micro.open();
         speaker.open();
 
-        while (true)
-            speaker.playAudio(micro.readAudio());
+        SourceDataLine driver = speaker.getDriver();
+        System.out.println("Soporte de controles en line");
+        System.out.println("---------------");
+        System.out.println("Pan: "+
+                driver.isControlSupported(Type.PAN));
 
+        System.out.println("AuxReturn: "+
+                driver.isControlSupported(Type.AUX_RETURN));
+
+        System.out.println("AuxSend: "+
+                driver.isControlSupported(Type.AUX_SEND));
+
+        System.out.println("Balance: "+
+                driver.isControlSupported(Type.BALANCE));
+
+        System.out.println("ReverbReturn: "+
+                driver.isControlSupported(Type.REVERB_RETURN));
+
+        System.out.println("ReberbSend: "+
+                driver.isControlSupported(Type.REVERB_SEND));
+
+        System.out.println("Volume: "+
+                driver.isControlSupported(Type.VOLUME));
+
+        System.out.println("SampleRate: "+
+                driver.isControlSupported(Type.SAMPLE_RATE));
+
+        System.out.println("MasterGain: "+
+                driver.isControlSupported(Type.MASTER_GAIN));
+
+        /*while (true)
+            speaker.playAudio(micro.readAudio());
+*/
 //        AudioInputStream ais = micro.getInputStream();
 //        File fSound = new File("/home/martin/AudioTesting/voice.wav");
 //        fSound.createNewFile();
@@ -39,10 +73,10 @@ public class Main {
 
 //        long time = System.currentTimeMillis();
 //        LinkedList<byte[]> list = new LinkedList<>();
-//        
-//        while (System.currentTimeMillis() - time <= 5000)            
+//
+//        while (System.currentTimeMillis() - time <= 5000)
 //            list.add(micro.readAudio(32));
-//        
+//
 //        for (byte[] buffer : list)
 //            System.out.println(Arrays.toString(buffer));*/
     }

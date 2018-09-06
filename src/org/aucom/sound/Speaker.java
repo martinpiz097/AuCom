@@ -22,7 +22,7 @@ public class Speaker extends AudioInterface {
     private volatile SourceDataLine driver;
     private volatile SourceDataLine.Info driverInfo;
 
-    
+
     public Speaker() throws LineUnavailableException {
         super();
         driverInfo = new DataLine.Info(SourceDataLine.class, DEFAULT_FORMAT);
@@ -32,7 +32,7 @@ public class Speaker extends AudioInterface {
     public Speaker(AudioFormat quality) throws LineUnavailableException {
         configure(quality);
     }
-    
+
     // Experimental
     public Speaker(SourceDataLine driver) {
         super(driver.getFormat());
@@ -43,16 +43,20 @@ public class Speaker extends AudioInterface {
         return driver;
     }
 
+    public float getGain() {
+        return getControl(Type.MASTER_GAIN).getValue();
+    }
+
     public void setGain(float gain){
         FloatControl control = getControl(Type.MASTER_GAIN);
         control.setValue(gain);
     }
-    
+
     public void setDriver(SourceDataLine driver){
         if (driver != null)
             this.driver = driver;
     }
-    
+
     @Override
     public synchronized void configure(AudioFormat quality) throws LineUnavailableException {
         driverInfo = new DataLine.Info(SourceDataLine.class, quality);
@@ -63,16 +67,16 @@ public class Speaker extends AudioInterface {
     public synchronized boolean isOpen(){
         return driver.isOpen();
     }
-    
+
     public synchronized AudioFormat getFormat(){
         return driver.getFormat();
     }
-    
+
     /**
      * Returns the specified control, but if this is'n incompatible
      * this method returns null.
      * @param type Control's type to call.
-     * @return The specified control or null if this method 
+     * @return The specified control or null if this method
      * throws an IllegalArgumentException internally.
      */
     public synchronized FloatControl getControl(FloatControl.Type type) {
@@ -81,9 +85,9 @@ public class Speaker extends AudioInterface {
         } catch (IllegalArgumentException e) {
             return null;
         }
-        
+
     }
-    
+
     @Override
     public synchronized void open() throws LineUnavailableException {
         AudioFormat format = driver.getFormat();
@@ -95,18 +99,18 @@ public class Speaker extends AudioInterface {
     public synchronized void stop(){
         driver.stop();
     }
-    
+
     @Override
     public synchronized void close(){
         driver.close();
     }
-    
+
     public void playAudio(byte[] audioBuff){
         if(audioBuff == null)
             return;
         driver.write(audioBuff, 0, audioBuff.length);
     }
-    
+
     public void playAudio(byte[] audioBuff, int len){
         if (audioBuff == null)
             return;

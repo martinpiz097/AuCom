@@ -1,4 +1,4 @@
-package org.aucommon.test;
+package org.aucom.test;
 
 ///*
 // * To change this license header, choose License Headers in Project Properties.
@@ -16,7 +16,7 @@ package org.aucommon.test;
 //public class TestBytesCodes {
 //    public static void main(String[] args) throws IOException {
 //        System.out.println("Combinaciones posibles de bytes: "+(256*256));
-//        
+//
 //        // 8 para los positivos y 16 para los negativos
 ////        for (int i = -128; i < 256; i++) {
 ////            System.out.println(i+": Largo binario: "+Long.toBinaryString(i).length() );
@@ -28,7 +28,7 @@ package org.aucommon.test;
 //            counter+=reducedBin(Long.toBinaryString(i)).length();
 //        }
 //        System.out.println(counter/4);
-//        
+//
 ////        File file = new File("/home/martin/xd.txt");
 ////        FileOutputStream fos = new FileOutputStream(file);
 ////        fos.write(Integer.MAX_VALUE);
@@ -52,5 +52,5 @@ package org.aucommon.test;
 //        }
 //        return sbBin.toString();
 //    }
-//    
+//
 //}

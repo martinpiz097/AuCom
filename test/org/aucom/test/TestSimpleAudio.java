@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package org.aucommon.test;
+package org.aucom.test;
 
 import javax.sound.sampled.AudioFormat;
 import javax.sound.sampled.AudioSystem;
@@ -20,9 +20,9 @@ import org.aucom.sound.AudioQuality;
 public class TestSimpleAudio {
     public static void main(String[] args) throws LineUnavailableException {
         AudioFormat format = AudioQuality.LOW;
-        TargetDataLine microphone = (TargetDataLine) 
+        TargetDataLine microphone = (TargetDataLine)
                 AudioSystem.getLine(new DataLine.Info(TargetDataLine.class, format));
-        SourceDataLine speaker = (SourceDataLine) 
+        SourceDataLine speaker = (SourceDataLine)
                 AudioSystem.getLine(new DataLine.Info(SourceDataLine.class, format));
         microphone.open();
         microphone.start();
