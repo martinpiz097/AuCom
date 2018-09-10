@@ -62,9 +62,9 @@ public class Main {
         System.out.println("MasterGain: "+
                 driver.isControlSupported(Type.MASTER_GAIN));
 
-        /*while (true)
+        while (true)
             speaker.playAudio(micro.readAudio());
-*/
+
 //        AudioInputStream ais = micro.getInputStream();
 //        File fSound = new File("/home/martin/AudioTesting/voice.wav");
 //        fSound.createNewFile();

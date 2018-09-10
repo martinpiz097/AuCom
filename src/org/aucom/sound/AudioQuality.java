@@ -25,4 +25,8 @@ public class AudioQuality {
             AudioFormat.Encoding.PCM_SIGNED, 8000.0f, 16, 1, 2, 8000.0f, false);
     public static final AudioFormat VERY_POOR = new AudioFormat(
             AudioFormat.Encoding.PCM_SIGNED, 7350.0f, 16, 1, 2, 7350.0f, false);
+
+    public static final AudioFormat DEFAULT_QUALITY = new AudioFormat(
+            AudioFormat.Encoding.PCM_SIGNED, 12288.0f, 8, 1, 1, 16000.0f, true);
+    //16000.0f, 8, 1, true, true);
 }

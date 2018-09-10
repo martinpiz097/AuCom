@@ -29,3 +29,6 @@
 0.9.5	- Added multithreading support
 
 0.9.6	- Added getGain method in speaker
+
+0.9.7	- Added setDriverInfo method
+	- Microphone and Speaker classes structure modified

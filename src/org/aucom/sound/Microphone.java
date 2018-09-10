@@ -1,8 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package org.aucom.sound;
 
 import javax.sound.sampled.AudioFormat;
@@ -13,16 +8,15 @@ import javax.sound.sampled.FloatControl;
 import javax.sound.sampled.LineUnavailableException;
 import javax.sound.sampled.TargetDataLine;
 import static org.aucom.sound.AudioInfo.BUFF_SIZE;
-import static org.aucom.sound.AudioInfo.DEFAULT_FORMAT;
+import static org.aucom.sound.AudioQuality.DEFAULT_QUALITY;
 
 /**
  *
  * @author martin
  */
-public class Microphone extends AudioInterface{
+public class Microphone extends AudioInterface {
     private volatile TargetDataLine driver;
-    private volatile TargetDataLine.Info driverInfo;
-    
+
     // Añadir mas adelante un buffer para almacenar el audio y desde ahi
     // rescatar bytes y reemplazar metodo de grabacion por algo mas completo
     // como por ejemplo si quiero grabar en au hacerlo con el otro metodo
@@ -30,10 +24,10 @@ public class Microphone extends AudioInterface{
 //    public static enum COMPRESS_TYPE{
 //        NONE, OMEGA;
 //    }
-    
+
     public Microphone() throws LineUnavailableException {
-        driverInfo = new DataLine.Info(TargetDataLine.class, DEFAULT_FORMAT);
-        driver = (TargetDataLine) AudioSystem.getLine(driverInfo);
+        driver = (TargetDataLine) AudioSystem
+                .getLine(getLineInfo(DEFAULT_QUALITY));
     }
 
     public Microphone(AudioFormat quality) throws LineUnavailableException {
@@ -46,66 +40,84 @@ public class Microphone extends AudioInterface{
         this.driver = driver;
     }
 
-    public synchronized TargetDataLine getDriver() {
-        return driver;
+
+    protected synchronized DataLine.Info getLineInfo(AudioFormat format) {
+        return new DataLine.Info(TargetDataLine.class, format);
     }
 
-    public void setDriver(TargetDataLine driver){
-        if (driver != null)
-            this.driver = driver;
+    @Override
+    public synchronized void configure(AudioFormat format) throws LineUnavailableException{
+        driver = (TargetDataLine) AudioSystem.getLine(getLineInfo(format));
+    }
+
+    @Override
+    public synchronized boolean isOpen(){
+        return driver.isOpen();
     }
 
     public AudioInputStream getInputStream() {
         return new AudioInputStream(driver);
     }
-    
-    @Override
-    public synchronized void configure(AudioFormat format) throws LineUnavailableException{
-        driverInfo = new DataLine.Info(TargetDataLine.class, format);
-        driver = (TargetDataLine) AudioSystem.getLine(driverInfo);
+
+    public synchronized TargetDataLine getDriver() {
+        return driver;
     }
-    
-    @Override
-    public synchronized boolean isOpen(){
-        return driver.isOpen();
+
+    public synchronized TargetDataLine.Info getDriverInfo() {
+        return (TargetDataLine.Info) driver.getLineInfo();
     }
-    
+
+    public void setDriver(TargetDataLine driver){
+        if (driver != null && driver.isOpen())
+            close();
+            this.driver = driver;
+    }
+
+    @Override
+    public synchronized void setDriverInfo(DataLine.Info driverInfo) throws LineUnavailableException {
+        if (driver != null) {
+            driver.close();
+            driver = (TargetDataLine) AudioSystem.getLine(driverInfo);
+        }
+    }
+
+
     public synchronized AudioFormat getFormat(){
         return driver.getFormat();
     }
-    
+
     public synchronized FloatControl getControl(FloatControl.Type type) {
          return (FloatControl) driver.getControl(type);
     }
-    
+
     @Override
     public synchronized void open() throws LineUnavailableException {
-        //AudioFormat format = driver == null ? null : driver.getFormat();
-        AudioFormat format = driver.getFormat();
-        driver.open(format == null ? DEFAULT_FORMAT : format);
+        //AudioFormat lineFormat = driver == null ? null : driver.getFormat();
+        AudioFormat lineFormat = driver.getFormat();
+        driver.open(lineFormat == null ? DEFAULT_QUALITY : lineFormat);
         driver.start();
     }
-    
+
     @Override
     public synchronized void stop(){
         driver.stop();
     }
-    
+
     @Override
     public synchronized void close(){
         driver.close();
     }
-    
+
     public synchronized void reopen() throws LineUnavailableException{
         if (driver.isOpen())
             driver.stop();
         open();
     }
-    
+
     public byte[] readAudio(){
         // available va aumentando hasta llegar al limite del buffer
         // no sirve para saber cuantos bytes quedan por leer
-        
+
         //System.out.println("Available: "+driver.available());
         //System.out.println(Arrays.toString(audioBuff));
 //        int zeroCount = 0;
@@ -114,7 +126,7 @@ public class Microphone extends AudioInterface{
 //                zeroCount++;
 //        System.out.println("Cantidad de ceros: "+zeroCount);
 //        System.out.println("-------------------------------");
-        
+
 //        new Thread(() -> {
 //            for (int i = 0; i < audioBuff.length; i++) {
 //                if (audioBuff[i] < 0) {
@@ -125,17 +137,17 @@ public class Microphone extends AudioInterface{
         //return AudioManager.getAudioCleaned(audioBuff);
         return readAudio(BUFF_SIZE);
     }
-    
+
     public byte[] readAudio(int len){
         byte[] audioBuff = new byte[len];
         driver.read(audioBuff, 0, len);
         return audioBuff;
     }
-    
+
 //    public byte[] readAudio(COMPRESS_TYPE compressType){
 //        return readAudio(compressType, BUFF_SIZE);
 //    }
-//    
+//
 //    public byte[] readAudio(COMPRESS_TYPE compressType, int len){
 //        byte[] audio = readAudio(len);
 //        if (compressType == COMPRESS_TYPE.NONE)
@@ -146,7 +158,7 @@ public class Microphone extends AudioInterface{
 //            else
 //                return null;
 //    }
-    
+
     public int readAudio(byte[] buffer, int off, int len){
         if (off >= len)
             throw new IndexOutOfBoundsException();
@@ -156,7 +168,7 @@ public class Microphone extends AudioInterface{
             len = buffer.length;
         return driver.read(buffer, off, len);
     }
-    
+
 //    public byte[] record(long time){
 //        ByteBuffer buffer = new ByteBuffer();
 //        long ti = System.currentTimeMillis();
@@ -169,7 +181,7 @@ public class Microphone extends AudioInterface{
 //        }
 //        return buffer.toArray();
 //    }
-    
+
     /*public static void main(String[] args) throws LineUnavailableException {
         Microphone micro = new Microphone(AudioQuality.NORMAL);
         Speaker sp = new Speaker(micro.getFormat());
@@ -190,5 +202,5 @@ public class Microphone extends AudioInterface{
             System.out.println("IllegalArgument");
         }
     }*/
-    
+
 }

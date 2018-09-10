@@ -1,18 +1,8 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package org.aucom.sound;
 
-import javax.sound.sampled.AudioFormat;
-import javax.sound.sampled.AudioSystem;
-import javax.sound.sampled.DataLine;
-import javax.sound.sampled.FloatControl;
+import javax.sound.sampled.*;
 import javax.sound.sampled.FloatControl.Type;
-import javax.sound.sampled.LineUnavailableException;
-import javax.sound.sampled.SourceDataLine;
-import static org.aucom.sound.AudioInfo.DEFAULT_FORMAT;
+import static org.aucom.sound.AudioQuality.DEFAULT_QUALITY;
 
 /**
  *
@@ -20,28 +10,49 @@ import static org.aucom.sound.AudioInfo.DEFAULT_FORMAT;
  */
 public class Speaker extends AudioInterface {
     private volatile SourceDataLine driver;
-    private volatile SourceDataLine.Info driverInfo;
 
 
     public Speaker() throws LineUnavailableException {
         super();
-        driverInfo = new DataLine.Info(SourceDataLine.class, DEFAULT_FORMAT);
-        driver = (SourceDataLine) AudioSystem.getLine(driverInfo);
+        driver = (SourceDataLine) AudioSystem.getLine(getLineInfo(DEFAULT_QUALITY));
+        printDriverInfo();
     }
 
     public Speaker(AudioFormat quality) throws LineUnavailableException {
         configure(quality);
+        printDriverInfo();
     }
 
     // Experimental
     public Speaker(SourceDataLine driver) {
         super(driver.getFormat());
         this.driver = driver;
+        printDriverInfo();
     }
 
-    public synchronized SourceDataLine getDriver() {
-        return driver;
+    @Override
+    protected synchronized DataLine.Info getLineInfo(AudioFormat format) {
+        return new DataLine.Info(SourceDataLine.class, format);
     }
+
+    private void printDriverInfo() {
+        DataLine.Info driverInfo = getDriverInfo();
+        System.out.println("LineInfo");
+        System.out.println("--------------");
+        System.out.println("MaxBuffSize: "+driverInfo.getMaxBufferSize());
+        System.out.println("MinBuffSize: "+driverInfo.getMinBufferSize());
+        System.out.println("BufferSize: "+driver.getBufferSize());
+        System.out.println("MicrosecondPosition: "+driver.getMicrosecondPosition());
+        System.out.println("FramePosition: "+driver.getFramePosition());
+        System.out.println("--------------");
+    }
+
+    private void showCurrentPositions() {
+        System.out.println("MicrosecondPosition: "+driver.getMicrosecondPosition());
+        System.out.println("FramePosition: "+driver.getFramePosition());
+        System.out.println("--------------");
+    }
+
 
     public float getGain() {
         return getControl(Type.MASTER_GAIN).getValue();
@@ -52,15 +63,9 @@ public class Speaker extends AudioInterface {
         control.setValue(gain);
     }
 
-    public void setDriver(SourceDataLine driver){
-        if (driver != null)
-            this.driver = driver;
-    }
-
     @Override
     public synchronized void configure(AudioFormat quality) throws LineUnavailableException {
-        driverInfo = new DataLine.Info(SourceDataLine.class, quality);
-        driver = (SourceDataLine) AudioSystem.getLine(driverInfo);
+        driver = (SourceDataLine) AudioSystem.getLine(getLineInfo(quality));
     }
 
     @Override
@@ -68,6 +73,30 @@ public class Speaker extends AudioInterface {
         return driver.isOpen();
     }
 
+    public synchronized SourceDataLine getDriver() {
+        return driver;
+    }
+
+    public synchronized SourceDataLine.Info getDriverInfo() {
+        return (SourceDataLine.Info) driver.getLineInfo();
+    }
+
+    public void setDriver(SourceDataLine driver){
+        if (driver != null && driver.isOpen()) {
+            close();
+            this.driver = driver;
+        }
+    }
+
+    @Override
+    public void setDriverInfo(DataLine.Info driverInfo) throws LineUnavailableException {
+        if (driver != null) {
+            driver.close();
+            driver = (SourceDataLine) AudioSystem.getLine(driverInfo);
+        }
+    }
+
+    @Override
     public synchronized AudioFormat getFormat(){
         return driver.getFormat();
     }
@@ -79,6 +108,8 @@ public class Speaker extends AudioInterface {
      * @return The specified control or null if this method
      * throws an IllegalArgumentException internally.
      */
+
+    @Override
     public synchronized FloatControl getControl(FloatControl.Type type) {
         try {
             return (FloatControl) driver.getControl(type);
@@ -90,8 +121,8 @@ public class Speaker extends AudioInterface {
 
     @Override
     public synchronized void open() throws LineUnavailableException {
-        AudioFormat format = driver.getFormat();
-        driver.open(format == null ? DEFAULT_FORMAT : format);
+        AudioFormat lineFormat = driver.getFormat();
+        driver.open(lineFormat == null ? DEFAULT_QUALITY : lineFormat);
         driver.start();
     }
 
