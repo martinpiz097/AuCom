@@ -32,3 +32,5 @@
 
 0.9.7	- Added setDriverInfo method
 	- Microphone and Speaker classes structure modified
+
+0.10	- Project structure changed to maven

@@ -1,0 +1,33 @@
+package org.aucom.io;
+
+import org.bytebuffer.ByteBuffer;
+
+/**
+ *
+ * @author martin
+ */
+public class AudioBuffer extends ByteBuffer {
+
+    public AudioBuffer() {
+        super();
+    }
+
+    public AudioBuffer(int capacity) {
+        super(capacity);
+    }
+
+    public AudioBuffer(byte[] array) {
+        super(array);
+    }
+
+    public boolean isValidVoice(){
+        byte[] auBytes = getRawArray();
+        byte b;
+        for (int i = 0; i < auBytes.length; i++) {
+            b = auBytes[i];
+            if (b != 0 && b != -1)
+                return true;
+        }
+        return false;
+    }
+}
