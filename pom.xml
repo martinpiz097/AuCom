@@ -6,7 +6,7 @@
 
     <groupId>org.aucom</groupId>
     <artifactId>aucom</artifactId>
-    <version>1.0</version>
+    <version>0.10.1</version>
     <build>
         <plugins>
             <plugin>
@@ -31,7 +31,7 @@
         <dependency>
             <groupId>org.bytebuffer</groupId>
             <artifactId>bytebuffer</artifactId>
-            <version>1.0</version>
+            <version>0.2</version>
         </dependency>
     </dependencies>
 

@@ -34,3 +34,5 @@
 	- Microphone and Speaker classes structure modified
 
 0.10	- Project structure changed to maven
+
+0.10.1 	- Line info omitted

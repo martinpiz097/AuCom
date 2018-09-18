@@ -1,0 +1,9 @@
+org/aucom/io/ElectroOutputStream.class
+org/aucom/test/Main.class
+org/aucom/sound/Speaker.class
+org/aucom/sound/AudioInterface.class
+org/aucom/sound/Microphone.class
+org/aucom/sound/AudioQuality.class
+org/aucom/io/ElectroInputStream.class
+org/aucom/io/AudioBuffer.class
+org/aucom/sound/AudioInfo.class

@@ -15,19 +15,19 @@ public class Speaker extends AudioInterface {
     public Speaker() throws LineUnavailableException {
         super();
         driver = (SourceDataLine) AudioSystem.getLine(getLineInfo(DEFAULT_QUALITY));
-        printDriverInfo();
+        //printDriverInfo();
     }
 
     public Speaker(AudioFormat quality) throws LineUnavailableException {
         configure(quality);
-        printDriverInfo();
+        //printDriverInfo();
     }
 
     // Experimental
     public Speaker(SourceDataLine driver) {
         super(driver.getFormat());
         this.driver = driver;
-        printDriverInfo();
+        //printDriverInfo();
     }
 
     @Override
@@ -35,7 +35,7 @@ public class Speaker extends AudioInterface {
         return new DataLine.Info(SourceDataLine.class, format);
     }
 
-    private void printDriverInfo() {
+    /*private void printDriverInfo() {
         DataLine.Info driverInfo = getDriverInfo();
         System.out.println("LineInfo");
         System.out.println("--------------");
@@ -45,7 +45,7 @@ public class Speaker extends AudioInterface {
         System.out.println("MicrosecondPosition: "+driver.getMicrosecondPosition());
         System.out.println("FramePosition: "+driver.getFramePosition());
         System.out.println("--------------");
-    }
+    }*/
 
     // testing
     /*public void showCurrentPositions() {
