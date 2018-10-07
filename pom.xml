@@ -37,8 +37,8 @@
     <dependencies>
         <dependency>
             <groupId>com.gitlab.martinpiz097</groupId>
-            <artifactId>ByteBuffer</artifactId>
-            <version>v0.2</version>
+            <artifactId>bytebuffer</artifactId>
+            <version>0.2</version>
         </dependency>
     </dependencies>
 
