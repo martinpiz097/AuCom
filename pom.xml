@@ -6,7 +6,7 @@
 
     <groupId>org.aucom</groupId>
     <artifactId>aucom</artifactId>
-    <version>0.10.1</version>
+    <version>0.10.2</version>
     <build>
         <plugins>
             <plugin>
@@ -17,6 +17,24 @@
                     <target>1.8</target>
                 </configuration>
             </plugin>
+
+            <!--Con Dependencias dentro -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-shade-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>shade</goal>
+                        </goals>
+                    </execution>
+                </executions>
+                <configuration>
+                    <finalName>${artifactId}-${version}</finalName>
+                </configuration>
+            </plugin>
+
         </plugins>
     </build>
     <packaging>jar</packaging>
