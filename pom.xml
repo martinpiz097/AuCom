@@ -6,7 +6,7 @@
 
     <groupId>org.aucom</groupId>
     <artifactId>aucom</artifactId>
-    <version>0.10.2</version>
+    <version>0.10.1</version>
     <build>
         <plugins>
             <plugin>
