@@ -7,7 +7,8 @@ import javax.sound.sampled.DataLine;
 import javax.sound.sampled.FloatControl;
 import javax.sound.sampled.LineUnavailableException;
 import javax.sound.sampled.TargetDataLine;
-import static org.aucom.sound.AudioInfo.BUFF_SIZE;
+
+import static org.aucom.SysInfo.BUFF_SIZE;
 import static org.aucom.sound.AudioQuality.DEFAULT_QUALITY;
 
 /**

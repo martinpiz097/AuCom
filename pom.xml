@@ -6,35 +6,17 @@
 
     <groupId>org.aucom</groupId>
     <artifactId>aucom</artifactId>
-    <version>0.10.1</version>
+    <version>1.0</version>
     <build>
         <plugins>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
                 <configuration>
-                    <source>1.8</source>
-                    <target>1.8</target>
+                    <source>8</source>
+                    <target>8</target>
                 </configuration>
             </plugin>
-
-            <!--Con Dependencias dentro -->
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-shade-plugin</artifactId>
-                <executions>
-                    <execution>
-                        <phase>package</phase>
-                        <goals>
-                            <goal>shade</goal>
-                        </goals>
-                    </execution>
-                </executions>
-                <configuration>
-                    <finalName>${artifactId}-${version}</finalName>
-                </configuration>
-            </plugin>
-
         </plugins>
     </build>
     <packaging>jar</packaging>
@@ -47,17 +29,26 @@
 
     <repositories>
         <repository>
-            <id>jitpack.io</id>
-            <url>https://jitpack.io</url>
+            <id>clojars</id>
+            <name>Clojars repository</name>
+            <url>https://clojars.org/repo</url>
         </repository>
     </repositories>
 
     <dependencies>
         <dependency>
-            <groupId>com.gitlab.martinpiz097</groupId>
+            <groupId>org.bytebuffer</groupId>
             <artifactId>bytebuffer</artifactId>
             <version>0.2</version>
         </dependency>
     </dependencies>
+
+    <distributionManagement>
+        <repository>
+            <id>clojars</id>
+            <name>Clojars repository</name>
+            <url>https://clojars.org/repo</url>
+        </repository>
+    </distributionManagement>
 
 </project>
