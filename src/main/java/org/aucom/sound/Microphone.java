@@ -1,5 +1,9 @@
 package org.aucom.sound;
 
+import lombok.extern.java.Log;
+import org.aucom.MicrophoneListener;
+import org.aucom.io.MicrophoneEvent;
+
 import javax.sound.sampled.AudioFormat;
 import javax.sound.sampled.AudioInputStream;
 import javax.sound.sampled.AudioSystem;
@@ -7,16 +11,19 @@ import javax.sound.sampled.DataLine;
 import javax.sound.sampled.FloatControl;
 import javax.sound.sampled.LineUnavailableException;
 import javax.sound.sampled.TargetDataLine;
-
-import static org.aucom.SysInfo.BUFF_SIZE;
+import static org.aucom.sound.AudioInfo.BUFF_SIZE;
 import static org.aucom.sound.AudioQuality.DEFAULT_QUALITY;
 
 /**
  *
  * @author martin
  */
+@Log
 public class Microphone extends AudioInterface {
     private volatile TargetDataLine driver;
+    private final MicrophoneListener listener;
+
+    public static final int DEFAULT_BUFF_SIZE = 4096;
 
     // Añadir mas adelante un buffer para almacenar el audio y desde ahi
     // rescatar bytes y reemplazar metodo de grabacion por algo mas completo
@@ -29,16 +36,22 @@ public class Microphone extends AudioInterface {
     public Microphone() throws LineUnavailableException {
         driver = (TargetDataLine) AudioSystem
                 .getLine(getLineInfo(DEFAULT_QUALITY));
+        listener = new MicrophoneListener(this);
+        listener.start();
     }
 
     public Microphone(AudioFormat quality) throws LineUnavailableException {
+        log.info("Microphone builder start! before configure");
         configure(quality);
+        log.info("Microphone builder start! after configure");
+        listener = new MicrophoneListener(this);
     }
 
     // Experimental
     public Microphone(TargetDataLine driver) {
         super(driver.getFormat());
         this.driver = driver;
+        listener = new MicrophoneListener(this);
     }
 
 
@@ -203,5 +216,9 @@ public class Microphone extends AudioInterface {
             System.out.println("IllegalArgument");
         }
     }*/
+
+    public void listen(MicrophoneEvent event) {
+        listener.addEvent(event);
+    }
 
 }
