@@ -1,4 +1,4 @@
-package org.aucom.test;
+package org.aucom.testing;
 
 import org.aucom.sound.DigitalAudioSystem;
 

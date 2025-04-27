@@ -1,9 +1,6 @@
-package org.aucom.test;
+package org.aucom.testing;
 
-import java.io.File;
-import java.io.FileOutputStream;
 import java.nio.ByteBuffer;
-import java.util.LinkedList;
 
 public class NumberUtil {
 

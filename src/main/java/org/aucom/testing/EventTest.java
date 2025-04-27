@@ -1,13 +1,10 @@
-package org.aucom.test;
+package org.aucom.testing;
 
-import org.aucom.io.MicrophoneEvent;
-import org.aucom.sound.AudioQuality;
 import org.aucom.sound.Microphone;
 import org.aucom.sound.Speaker;
 
 import javax.sound.sampled.AudioFormat;
 import javax.sound.sampled.LineUnavailableException;
-import java.util.concurrent.atomic.AtomicLong;
 
 public class EventTest {
     public static void main(String[] args) throws Exception {
