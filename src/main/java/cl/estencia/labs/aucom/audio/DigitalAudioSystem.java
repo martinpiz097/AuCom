@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package org.aucom.sound;
+package cl.estencia.labs.aucom.audio;
 
 import javax.sound.sampled.*;
 import java.lang.reflect.Constructor;
@@ -11,30 +11,27 @@ import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Modifier;
 import java.util.*;
+import java.util.concurrent.CompletableFuture;
 
 /**
- *
  * @author martin
  */
 public class DigitalAudioSystem {
-    private ArrayList<Mixer> listMixers;
-    //private ArrayList<Mixer.Info> listMixInfo;
+    private final List<Mixer> listMixers;
 
     public DigitalAudioSystem() {
-        //listMixInfo = new ArrayList<>(Arrays.asList(javax.sound.sampled.AudioSystem.getMixerInfo()));
-        Mixer.Info[] mixerInfo = AudioSystem.getMixerInfo();
-
-        listMixers = new ArrayList<>();
-
-        for (int i = 0; i < mixerInfo.length; i++)
-            listMixers.add(javax.sound.sampled.AudioSystem.getMixer(mixerInfo[i]));
-
+        this.listMixers = new ArrayList<>();
+        loadMixers();
     }
 
-    private void  addDataToList(Object[] data, List list) {
-        if (data != null && data.length > 0)
-            for (int i = 0; i < data.length; i++)
-                list.add(data[i]);
+    private void loadMixers() {
+        Mixer.Info[] mixersInfo = AudioSystem.getMixerInfo();
+
+        Mixer.Info mixerInfo;
+        for (int i = 0; i < mixersInfo.length; i++) {
+            mixerInfo = mixersInfo[i];
+            listMixers.add(AudioSystem.getMixer(mixerInfo));
+        }
     }
 
     private boolean isLineSupported(Mixer mixer, Class<? extends Line> infoClass) {
@@ -46,7 +43,7 @@ public class DigitalAudioSystem {
             Line.Info[] sourceLineInfo = mixer.getSourceLineInfo(new Line.Info(infoClass));
             Line.Info[] targetLineInfo = mixer.getTargetLineInfo(new Line.Info(infoClass));
 
-            Line.Info[] result = new Line.Info[sourceLineInfo.length+targetLineInfo.length];
+            Line.Info[] result = new Line.Info[sourceLineInfo.length + targetLineInfo.length];
 
             int linesCount = 0;
             if (sourceLineInfo.length > 0) {
@@ -60,39 +57,41 @@ public class DigitalAudioSystem {
 
             return result;
 
-        }
-        else
+        } else
             return null;
     }
 
     public Mixer getMixer(String name) {
         return listMixers.parallelStream()
-                .filter(mixer->mixer.getMixerInfo().getName().equals(name))
+                .filter(mixer -> mixer.getMixerInfo().getName().equals(name))
                 .findFirst().orElse(null);
     }
 
-    public ArrayList<Line> getMixerLines(Mixer mixer) {
+    public List<Line> getMixerLines(Mixer mixer) {
         return getMixerLines(mixer.getMixerInfo().getName());
     }
 
-    public ArrayList<Line> getMixerLines(String mixerName) {
+    public List<Line> getMixerLines(String mixerName) {
         Mixer mixer = getMixer(mixerName);
-        ArrayList<Line> listLines = new ArrayList<>();
-        listLines.addAll(getMixerTargetLines(mixer.getMixerInfo().getName()));
-        listLines.addAll(getMixerSourceLines(mixer.getMixerInfo().getName()));
-        listLines.addAll(getMixerPorts(mixer.getMixerInfo().getName()));
-        listLines.addAll(getMixerClips(mixer.getMixerInfo().getName()));
+        Mixer.Info mixerInfo = mixer.getMixerInfo();
+        String mixerInfoName = mixerInfo.getName();
+
+        List<Line> listLines = new ArrayList<>();
+        listLines.addAll(getMixerTargetLines(mixerInfoName));
+        listLines.addAll(getMixerSourceLines(mixerInfoName));
+        listLines.addAll(getMixerPorts(mixerInfoName));
+        listLines.addAll(getMixerClips(mixerInfoName));
 
         return listLines;
     }
 
-    public ArrayList<SourceDataLine> getMixerSourceLines(Mixer mixer) {
+    public List<SourceDataLine> getMixerSourceLines(Mixer mixer) {
         return getMixerSourceLines(mixer.getMixerInfo().getName());
     }
 
-    public ArrayList<SourceDataLine> getMixerSourceLines(String mixerName) {
+    public List<SourceDataLine> getMixerSourceLines(String mixerName) {
         Mixer mixer = getMixer(mixerName);
-        ArrayList<SourceDataLine> listLines = new ArrayList<>();
+        List<SourceDataLine> listLines = new ArrayList<>();
 
         if (mixer != null) {
             Line.Info[] lineInfos = findLines(mixer, SourceDataLine.class);
@@ -109,13 +108,13 @@ public class DigitalAudioSystem {
         return listLines;
     }
 
-    public ArrayList<TargetDataLine> getMixerTargetLines(Mixer mixer) {
+    public List<TargetDataLine> getMixerTargetLines(Mixer mixer) {
         return getMixerTargetLines(mixer.getMixerInfo().getName());
     }
 
-    public ArrayList<TargetDataLine> getMixerTargetLines(String mixerName) {
+    public List<TargetDataLine> getMixerTargetLines(String mixerName) {
         Mixer mixer = getMixer(mixerName);
-        ArrayList<TargetDataLine> listLines = new ArrayList<>();
+        List<TargetDataLine> listLines = new ArrayList<>();
 
         if (mixer != null) {
             Line.Info[] lineInfos = findLines(mixer, TargetDataLine.class);
@@ -132,13 +131,13 @@ public class DigitalAudioSystem {
         return listLines;
     }
 
-    public ArrayList<Port> getMixerPorts(Mixer mixer) {
+    public List<Port> getMixerPorts(Mixer mixer) {
         return getMixerPorts(mixer.getMixerInfo().getName());
     }
 
-    public ArrayList<Port> getMixerPorts(String mixerName) {
+    public List<Port> getMixerPorts(String mixerName) {
         Mixer mixer = getMixer(mixerName);
-        ArrayList<Port> listLines = new ArrayList<>();
+        List<Port> listLines = new ArrayList<>();
 
         if (mixer != null) {
             Line.Info[] lineInfos = findLines(mixer, Port.class);
@@ -155,13 +154,13 @@ public class DigitalAudioSystem {
         return listLines;
     }
 
-    public ArrayList<Clip> getMixerClips(Mixer mixer) {
+    public List<Clip> getMixerClips(Mixer mixer) {
         return getMixerClips(mixer.getMixerInfo().getName());
     }
 
-    public ArrayList<Clip> getMixerClips(String mixerName) {
+    public List<Clip> getMixerClips(String mixerName) {
         Mixer mixer = getMixer(mixerName);
-        ArrayList<Clip> listLines = new ArrayList<>();
+        List<Clip> listLines = new ArrayList<>();
 
         if (mixer != null) {
             Line.Info[] lineInfos = findLines(mixer, Clip.class);
@@ -187,11 +186,11 @@ public class DigitalAudioSystem {
         if (mixer == null)
             return null;
 
-        ArrayList<Port> mixerPorts = getMixerPorts(mixerName);
+        List<Port> mixerPorts = getMixerPorts(mixerName);
         return mixerPorts.parallelStream()
                 .filter(p -> {
                     final String name = p.getLineInfo().toString().toLowerCase();
-                    boolean contains = name.contains(input?"source":"target");
+                    boolean contains = name.contains(input ? "source" : "target");
                     return contains && name.contains(portName.toLowerCase());
                 })
                 .findFirst().orElse(null);
@@ -200,7 +199,7 @@ public class DigitalAudioSystem {
     private String[] getControlNames(Class<? extends Control.Type> clazz) throws
             NoSuchMethodException, IllegalAccessException, InvocationTargetException, InstantiationException {
         Field[] declaredFields = clazz.getDeclaredFields();
-        ArrayList<String> listNames = new ArrayList<>();
+        List<String> listNames = new ArrayList<>();
 
         Field field;
         Constructor<? extends Control.Type> constructor = clazz.getConstructor(String.class);
@@ -215,8 +214,8 @@ public class DigitalAudioSystem {
         return listNames.toArray(array);
     }
 
-    /*public ArrayList<Control> getControls(Line line) {
-        ArrayList<Control> listControls = new ArrayList<>();
+    /*public List<Control> getControls(Line line) {
+        List<Control> listControls = new ArrayList<>();
 
         try {
             String[] floatNames = getControlNames(FloatControl.Type.class);
@@ -241,13 +240,13 @@ public class DigitalAudioSystem {
 
     }*/
 
-    public HashMap<Mixer, ArrayList<Line>> getCompleteMixers() {
-        HashMap<Mixer, ArrayList<Line>> mapMixers = new HashMap<>();
-        listMixers.forEach(mixer->mapMixers.put(mixer, getMixerLines(mixer)));
+    public Map<Mixer, List<Line>> getCompleteMixers() {
+        Map<Mixer, List<Line>> mapMixers = new HashMap<>();
+        listMixers.forEach(mixer -> mapMixers.put(mixer, getMixerLines(mixer)));
         return mapMixers;
     }
 
-    public ArrayList<Mixer> getMixers() {
+    public List<Mixer> getMixers() {
         return listMixers;
     }
 

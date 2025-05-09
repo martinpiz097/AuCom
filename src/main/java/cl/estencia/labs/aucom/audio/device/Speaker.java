@@ -1,14 +1,14 @@
-package org.aucom.sound;
+package cl.estencia.labs.aucom.audio.device;
 
 import javax.sound.sampled.*;
 import javax.sound.sampled.FloatControl.Type;
-import static org.aucom.sound.AudioQuality.DEFAULT_QUALITY;
+import static cl.estencia.labs.aucom.audio.AudioQuality.DEFAULT_QUALITY;
 
 /**
  *
  * @author martin
  */
-public class Speaker extends AudioInterface {
+public class Speaker extends AudioDevice {
     private volatile SourceDataLine driver;
 
 
@@ -129,13 +129,18 @@ public class Speaker extends AudioInterface {
     }
 
     @Override
-    public synchronized void stop(){
-        driver.stop();
+    public synchronized void start() {
+        driver.start();
     }
 
     @Override
     public synchronized void close(){
         driver.close();
+    }
+
+    @Override
+    public synchronized void stop(){
+        driver.stop();
     }
 
     public void playAudio(byte[] audioBuff){

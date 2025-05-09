@@ -1,6 +1,6 @@
-package org.aucom.io;
+package cl.estencia.labs.aucom.io;
 
-import org.aucom.sound.Microphone;
+import cl.estencia.labs.aucom.audio.device.Microphone;
 
 public interface MicrophoneEvent {
     default void onAudioRead(byte[] buffer) {

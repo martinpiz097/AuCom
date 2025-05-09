@@ -3,19 +3,20 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package org.aucom.io;
+package cl.estencia.labs.aucom.io;
 
+import lombok.extern.java.Log;
 import org.bytebuffer.ByteBuffer;
 
 import java.io.IOException;
 import java.io.OutputStream;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 /**
  *
  * @author martin
  */
+
+@Log
 public class ElectroOutputStream extends OutputStream {
 
     private final ElectroInputStream electroInput;
@@ -49,8 +50,8 @@ public class ElectroOutputStream extends OutputStream {
     public int size(){
         try {
             return electroInput.available();
-        } catch (IOException ex) {
-            Logger.getLogger(ElectroOutputStream.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (IOException e) {
+            log.severe(e.getMessage());
         }
         return 0;
     }

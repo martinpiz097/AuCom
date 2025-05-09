@@ -1,4 +1,4 @@
-package org.aucom.sound;
+package cl.estencia.labs.aucom.audio.device;
 
 import javax.sound.sampled.*;
 
@@ -6,11 +6,11 @@ import javax.sound.sampled.*;
  *
  * @author martin
  */
-public abstract class AudioInterface {
+public abstract class AudioDevice {
 
-    public AudioInterface() {}
+    public AudioDevice() {}
 
-    public AudioInterface(AudioFormat quality) {}
+    public AudioDevice(AudioFormat quality) {}
 
     protected abstract DataLine.Info getLineInfo(AudioFormat format);
 
@@ -21,6 +21,7 @@ public abstract class AudioInterface {
     public abstract AudioFormat getFormat();
     public abstract FloatControl getControl(FloatControl.Type type);
     public abstract void open() throws LineUnavailableException;
-    public abstract void stop();
+    public abstract void start();
     public abstract void close();
+    public abstract void stop();
 }

@@ -3,9 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package org.aucom.sound;
-
-import javax.sound.sampled.AudioFormat;
+package cl.estencia.labs.aucom.audio;
 
 /**
  *

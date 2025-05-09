@@ -1,8 +1,8 @@
-package org.aucom.sound;
+package cl.estencia.labs.aucom.audio.device;
 
 import lombok.extern.java.Log;
-import org.aucom.MicrophoneListener;
-import org.aucom.io.MicrophoneEvent;
+import cl.estencia.labs.aucom.async.MicrophoneListener;
+import cl.estencia.labs.aucom.io.MicrophoneEvent;
 
 import javax.sound.sampled.AudioFormat;
 import javax.sound.sampled.AudioInputStream;
@@ -11,15 +11,15 @@ import javax.sound.sampled.DataLine;
 import javax.sound.sampled.FloatControl;
 import javax.sound.sampled.LineUnavailableException;
 import javax.sound.sampled.TargetDataLine;
-import static org.aucom.sound.AudioInfo.BUFF_SIZE;
-import static org.aucom.sound.AudioQuality.DEFAULT_QUALITY;
+import static cl.estencia.labs.aucom.audio.AudioInfo.BUFF_SIZE;
+import static cl.estencia.labs.aucom.audio.AudioQuality.DEFAULT_QUALITY;
 
 /**
  *
  * @author martin
  */
 @Log
-public class Microphone extends AudioInterface {
+public class Microphone extends AudioDevice {
     private volatile TargetDataLine driver;
     private final MicrophoneListener listener;
 
@@ -113,13 +113,18 @@ public class Microphone extends AudioInterface {
     }
 
     @Override
-    public synchronized void stop(){
-        driver.stop();
+    public synchronized void start() {
+        driver.start();
     }
 
     @Override
     public synchronized void close(){
         driver.close();
+    }
+
+    @Override
+    public synchronized void stop(){
+        driver.stop();
     }
 
     public synchronized void reopen() throws LineUnavailableException{

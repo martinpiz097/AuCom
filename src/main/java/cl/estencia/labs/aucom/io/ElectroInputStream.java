@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package org.aucom.io;
+package cl.estencia.labs.aucom.io;
 
 import org.bytebuffer.ByteBuffer;
 
@@ -14,6 +14,7 @@ import java.io.InputStream;
  *
  * @author martin
  */
+
 public class ElectroInputStream extends InputStream{
 
     private final ByteBuffer buffer;
