@@ -13,8 +13,6 @@ import javax.sound.sampled.*;
 public class Microphone extends AudioInputDevice {
     private volatile MicrophoneListener listener;
 
-    public static final int DEFAULT_BUFF_SIZE = 4096;
-
     public Microphone() {
         super();
         this.listener = createListener();

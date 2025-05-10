@@ -2,11 +2,12 @@ package cl.estencia.labs.aucom.audio.device;
 
 import javax.sound.sampled.AudioFormat;
 import javax.sound.sampled.AudioInputStream;
+import javax.sound.sampled.DataLine;
 import javax.sound.sampled.TargetDataLine;
 
 import static cl.estencia.labs.aucom.audio.AudioInfo.BUFF_SIZE;
 
-public abstract class AudioInputDevice extends AudioDevice<TargetDataLine> {
+public abstract class AudioInputDevice extends DataAudioDevice<TargetDataLine, DataLine.Info> {
 
     public AudioInputDevice() {
         super();

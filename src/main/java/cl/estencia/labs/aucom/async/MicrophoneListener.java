@@ -1,5 +1,6 @@
 package cl.estencia.labs.aucom.async;
 
+import cl.estencia.labs.aucom.audio.device.AudioInputDevice;
 import lombok.extern.java.Log;
 import cl.estencia.labs.aucom.event.MicrophoneEvent;
 import cl.estencia.labs.aucom.audio.device.Microphone;
@@ -9,7 +10,7 @@ import java.util.List;
 
 @Log
 public class MicrophoneListener extends Thread {
-    private final Microphone microphone;
+    private final AudioInputDevice microphone;
     private final List<MicrophoneEvent> listEvents;
 
     public MicrophoneListener(Microphone microphone) {

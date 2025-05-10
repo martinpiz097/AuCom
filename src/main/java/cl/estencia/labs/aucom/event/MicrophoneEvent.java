@@ -1,10 +1,10 @@
 package cl.estencia.labs.aucom.event;
 
-import cl.estencia.labs.aucom.audio.device.Microphone;
+import static cl.estencia.labs.aucom.common.IOConstants.DEFAULT_BUFF_SIZE;
 
 public interface MicrophoneEvent {
     default void onAudioRead(byte[] buffer) {
-        onAudioRead(buffer, Microphone.DEFAULT_BUFF_SIZE);
+        onAudioRead(buffer, DEFAULT_BUFF_SIZE);
     }
     void onAudioRead(byte[] buffer, int length);
 }

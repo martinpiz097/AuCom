@@ -1,12 +1,13 @@
 package cl.estencia.labs.aucom.audio.device;
 
 import javax.sound.sampled.AudioFormat;
+import javax.sound.sampled.DataLine;
 import javax.sound.sampled.FloatControl;
 import javax.sound.sampled.SourceDataLine;
 
 import static cl.estencia.labs.aucom.common.IOConstants.EOF;
 
-public abstract class AudioOutputDevice extends AudioDevice<SourceDataLine> {
+public abstract class AudioOutputDevice extends DataAudioDevice<SourceDataLine, DataLine.Info> {
 
     public AudioOutputDevice() {
         super();
