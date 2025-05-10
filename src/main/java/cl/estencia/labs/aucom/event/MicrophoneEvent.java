@@ -1,4 +1,4 @@
-package cl.estencia.labs.aucom.io;
+package cl.estencia.labs.aucom.event;
 
 import cl.estencia.labs.aucom.audio.device.Microphone;
 

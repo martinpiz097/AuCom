@@ -1,21 +1,16 @@
 package cl.estencia.labs.aucom.audio.device;
 
+import com.sun.media.sound.DirectAudioDeviceProvider;
 import lombok.extern.java.Log;
 import cl.estencia.labs.aucom.async.MicrophoneListener;
-import cl.estencia.labs.aucom.io.MicrophoneEvent;
+import cl.estencia.labs.aucom.event.MicrophoneEvent;
 
-import javax.sound.sampled.AudioFormat;
-import javax.sound.sampled.AudioInputStream;
-import javax.sound.sampled.AudioSystem;
-import javax.sound.sampled.DataLine;
-import javax.sound.sampled.FloatControl;
-import javax.sound.sampled.LineUnavailableException;
-import javax.sound.sampled.TargetDataLine;
+import javax.sound.sampled.*;
+
 import static cl.estencia.labs.aucom.audio.AudioInfo.BUFF_SIZE;
 import static cl.estencia.labs.aucom.audio.AudioQuality.DEFAULT_QUALITY;
 
 /**
- *
  * @author martin
  */
 @Log
@@ -60,16 +55,16 @@ public class Microphone extends AudioDevice {
     }
 
     @Override
-    public synchronized void configure(AudioFormat format) throws LineUnavailableException{
+    public synchronized void configure(AudioFormat format) throws LineUnavailableException {
         driver = (TargetDataLine) AudioSystem.getLine(getLineInfo(format));
     }
 
     @Override
-    public synchronized boolean isOpen(){
+    public synchronized boolean isOpen() {
         return driver.isOpen();
     }
 
-    public AudioInputStream getInputStream() {
+    public AudioInputStream getAudioInputStream() {
         return new AudioInputStream(driver);
     }
 
@@ -81,10 +76,10 @@ public class Microphone extends AudioDevice {
         return (TargetDataLine.Info) driver.getLineInfo();
     }
 
-    public void setDriver(TargetDataLine driver){
+    public void setDriver(TargetDataLine driver) {
         if (driver != null && driver.isOpen())
             close();
-            this.driver = driver;
+        this.driver = driver;
     }
 
     @Override
@@ -96,12 +91,12 @@ public class Microphone extends AudioDevice {
     }
 
 
-    public synchronized AudioFormat getFormat(){
+    public synchronized AudioFormat getFormat() {
         return driver.getFormat();
     }
 
     public synchronized FloatControl getControl(FloatControl.Type type) {
-         return (FloatControl) driver.getControl(type);
+        return (FloatControl) driver.getControl(type);
     }
 
     @Override
@@ -113,27 +108,18 @@ public class Microphone extends AudioDevice {
     }
 
     @Override
-    public synchronized void start() {
-        driver.start();
-    }
-
-    @Override
-    public synchronized void close(){
+    public synchronized void close() {
         driver.close();
     }
 
-    @Override
-    public synchronized void stop(){
-        driver.stop();
-    }
-
-    public synchronized void reopen() throws LineUnavailableException{
-        if (driver.isOpen())
+    public synchronized void reopen() throws LineUnavailableException {
+        if (driver.isOpen()) {
             driver.stop();
+        }
         open();
     }
 
-    public byte[] readAudio(){
+    public byte[] readAudio() {
         // available va aumentando hasta llegar al limite del buffer
         // no sirve para saber cuantos bytes quedan por leer
 
@@ -157,7 +143,7 @@ public class Microphone extends AudioDevice {
         return readAudio(BUFF_SIZE);
     }
 
-    public byte[] readAudio(int len){
+    public byte[] readAudio(int len) {
         byte[] audioBuff = new byte[len];
         driver.read(audioBuff, 0, len);
         return audioBuff;
@@ -178,7 +164,7 @@ public class Microphone extends AudioDevice {
 //                return null;
 //    }
 
-    public int readAudio(byte[] buffer, int off, int len){
+    public int readAudio(byte[] buffer, int off, int len) {
         if (off >= len)
             throw new IndexOutOfBoundsException();
         if (off < 0)

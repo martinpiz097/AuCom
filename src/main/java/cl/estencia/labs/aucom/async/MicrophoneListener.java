@@ -1,7 +1,7 @@
 package cl.estencia.labs.aucom.async;
 
 import lombok.extern.java.Log;
-import cl.estencia.labs.aucom.io.MicrophoneEvent;
+import cl.estencia.labs.aucom.event.MicrophoneEvent;
 import cl.estencia.labs.aucom.audio.device.Microphone;
 
 import java.util.ArrayList;
@@ -25,7 +25,7 @@ public class MicrophoneListener extends Thread {
     public void run() {
         byte[] audioBuffer;
         log.info("run() started thread!");
-        while (true) {
+        while (microphone.isOpen()) {
             while (listEvents.isEmpty()) {
                 try {
                     Thread.sleep(1);
@@ -34,8 +34,9 @@ public class MicrophoneListener extends Thread {
                 }
             }
             audioBuffer = microphone.readAudio();
-            for (MicrophoneEvent event : listEvents)
+            for (MicrophoneEvent event : listEvents) {
                 event.onAudioRead(audioBuffer);
+            }
         }
     }
 }

@@ -21,7 +21,5 @@ public abstract class AudioDevice {
     public abstract AudioFormat getFormat();
     public abstract FloatControl getControl(FloatControl.Type type);
     public abstract void open() throws LineUnavailableException;
-    public abstract void start();
     public abstract void close();
-    public abstract void stop();
 }

@@ -129,18 +129,8 @@ public class Speaker extends AudioDevice {
     }
 
     @Override
-    public synchronized void start() {
-        driver.start();
-    }
-
-    @Override
     public synchronized void close(){
         driver.close();
-    }
-
-    @Override
-    public synchronized void stop(){
-        driver.stop();
     }
 
     public void playAudio(byte[] audioBuff){
