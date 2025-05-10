@@ -14,7 +14,7 @@ public class MicrophoneListener extends Thread {
 
     public MicrophoneListener(Microphone microphone) {
         this.microphone = microphone;
-        listEvents = new ArrayList<>();
+        this.listEvents = new ArrayList<>();
     }
 
     public void addEvent(MicrophoneEvent microphoneEvent) {
@@ -23,20 +23,26 @@ public class MicrophoneListener extends Thread {
 
     @Override
     public void run() {
-        byte[] audioBuffer;
-        log.info("run() started thread!");
-        while (microphone.isOpen()) {
-            while (listEvents.isEmpty()) {
-                try {
-                    Thread.sleep(1);
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
+        try {
+            byte[] audioBuffer;
+            log.info("MicrophoneListener started!");
+            while (microphone.isOpen()) {
+                while (listEvents.isEmpty()) {
+                    try {
+                        Thread.sleep(1);
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+                }
+                audioBuffer = microphone.readAudio();
+                for (MicrophoneEvent event : listEvents) {
+                    event.onAudioRead(audioBuffer);
                 }
             }
-            audioBuffer = microphone.readAudio();
-            for (MicrophoneEvent event : listEvents) {
-                event.onAudioRead(audioBuffer);
-            }
+        } catch (Exception e) {
+
         }
+
+        log.info("MicrophoneListener finished!");
     }
 }

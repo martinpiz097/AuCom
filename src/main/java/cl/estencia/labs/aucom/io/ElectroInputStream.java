@@ -10,6 +10,8 @@ import org.bytebuffer.ByteBuffer;
 import java.io.IOException;
 import java.io.InputStream;
 
+import static cl.estencia.labs.aucom.common.IOConstants.EOF;
+
 /**
  *
  * @author martin
@@ -81,7 +83,7 @@ public class ElectroInputStream extends InputStream{
         //System.out.println("read largo");
         System.out.println("Pos: "+pos);
         if (!hasBytes())
-            return -1;
+            return EOF;
         if (len > b.length)
             len = b.length;
         if (len > available())
@@ -108,9 +110,9 @@ public class ElectroInputStream extends InputStream{
     public int read() throws IOException {
         //System.out.println("read");
         if (isMarked && readLimit == 0)
-            return -1;
+            return EOF;
         //pos++;
-        return buffer.isEmpty() ? -1 : buffer.pollFirst();
+        return buffer.isEmpty() ? EOF : buffer.pollFirst();
     }
     
     public byte[] read(int len) throws IOException{

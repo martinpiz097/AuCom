@@ -1,215 +1,85 @@
 package cl.estencia.labs.aucom.audio.device;
 
-import com.sun.media.sound.DirectAudioDeviceProvider;
 import lombok.extern.java.Log;
 import cl.estencia.labs.aucom.async.MicrophoneListener;
 import cl.estencia.labs.aucom.event.MicrophoneEvent;
 
 import javax.sound.sampled.*;
 
-import static cl.estencia.labs.aucom.audio.AudioInfo.BUFF_SIZE;
-import static cl.estencia.labs.aucom.audio.AudioQuality.DEFAULT_QUALITY;
-
 /**
  * @author martin
  */
 @Log
-public class Microphone extends AudioDevice {
-    private volatile TargetDataLine driver;
-    private final MicrophoneListener listener;
+public class Microphone extends AudioInputDevice {
+    private volatile MicrophoneListener listener;
 
     public static final int DEFAULT_BUFF_SIZE = 4096;
 
-    // Añadir mas adelante un buffer para almacenar el audio y desde ahi
-    // rescatar bytes y reemplazar metodo de grabacion por algo mas completo
-    // como por ejemplo si quiero grabar en au hacerlo con el otro metodo
-
-//    public static enum COMPRESS_TYPE{
-//        NONE, OMEGA;
-//    }
-
-    public Microphone() throws LineUnavailableException {
-        driver = (TargetDataLine) AudioSystem
-                .getLine(getLineInfo(DEFAULT_QUALITY));
-        listener = new MicrophoneListener(this);
-        listener.start();
+    public Microphone() {
+        super();
+        this.listener = createListener();
     }
 
-    public Microphone(AudioFormat quality) throws LineUnavailableException {
-        log.info("Microphone builder start! before configure");
-        configure(quality);
-        log.info("Microphone builder start! after configure");
-        listener = new MicrophoneListener(this);
+    public Microphone(AudioFormat quality) {
+        super(quality);
+        this.listener = createListener();
     }
 
-    // Experimental
     public Microphone(TargetDataLine driver) {
-        super(driver.getFormat());
-        this.driver = driver;
-        listener = new MicrophoneListener(this);
+        super(driver);
+        this.listener = createListener();
     }
 
-
+    @Override
     protected synchronized DataLine.Info getLineInfo(AudioFormat format) {
         return new DataLine.Info(TargetDataLine.class, format);
     }
 
-    @Override
-    public synchronized void configure(AudioFormat format) throws LineUnavailableException {
-        driver = (TargetDataLine) AudioSystem.getLine(getLineInfo(format));
+    private boolean isListenerAlive() {
+        return listener != null && listener.isAlive();
     }
 
-    @Override
-    public synchronized boolean isOpen() {
-        return driver.isOpen();
-    }
-
-    public AudioInputStream getAudioInputStream() {
-        return new AudioInputStream(driver);
-    }
-
-    public synchronized TargetDataLine getDriver() {
-        return driver;
-    }
-
-    public synchronized TargetDataLine.Info getDriverInfo() {
-        return (TargetDataLine.Info) driver.getLineInfo();
-    }
-
-    public void setDriver(TargetDataLine driver) {
-        if (driver != null && driver.isOpen())
-            close();
-        this.driver = driver;
-    }
-
-    @Override
-    public synchronized void setDriverInfo(DataLine.Info driverInfo) throws LineUnavailableException {
-        if (driver != null) {
-            driver.close();
-            driver = (TargetDataLine) AudioSystem.getLine(driverInfo);
+    private boolean startListener() {
+        if (listener == null) {
+            listener = createListener();
+        }
+        if (!isListenerAlive()) {
+            listener.start();
+            return true;
+        } else {
+            return false;
         }
     }
 
-
-    public synchronized AudioFormat getFormat() {
-        return driver.getFormat();
-    }
-
-    public synchronized FloatControl getControl(FloatControl.Type type) {
-        return (FloatControl) driver.getControl(type);
-    }
-
-    @Override
-    public synchronized void open() throws LineUnavailableException {
-        //AudioFormat lineFormat = driver == null ? null : driver.getFormat();
-        AudioFormat lineFormat = driver.getFormat();
-        driver.open(lineFormat == null ? DEFAULT_QUALITY : lineFormat);
-        driver.start();
-    }
-
-    @Override
-    public synchronized void close() {
-        driver.close();
-    }
-
-    public synchronized void reopen() throws LineUnavailableException {
-        if (driver.isOpen()) {
-            driver.stop();
+    private boolean closeListener() {
+        if (listener == null) {
+            return true;
         }
-        open();
-    }
-
-    public byte[] readAudio() {
-        // available va aumentando hasta llegar al limite del buffer
-        // no sirve para saber cuantos bytes quedan por leer
-
-        //System.out.println("Available: "+driver.available());
-        //System.out.println(Arrays.toString(audioBuff));
-//        int zeroCount = 0;
-//        for (int i = 0; i < audioBuff.length; i++)
-//            if (audioBuff[i] == 0)
-//                zeroCount++;
-//        System.out.println("Cantidad de ceros: "+zeroCount);
-//        System.out.println("-------------------------------");
-
-//        new Thread(() -> {
-//            for (int i = 0; i < audioBuff.length; i++) {
-//                if (audioBuff[i] < 0) {
-//                    System.out.println("Menor a 0 --> "+audioBuff[i]);
-//                }
-//            }
-//        }).start();
-        //return AudioManager.getAudioCleaned(audioBuff);
-        return readAudio(BUFF_SIZE);
-    }
-
-    public byte[] readAudio(int len) {
-        byte[] audioBuff = new byte[len];
-        driver.read(audioBuff, 0, len);
-        return audioBuff;
-    }
-
-//    public byte[] readAudio(COMPRESS_TYPE compressType){
-//        return readAudio(compressType, BUFF_SIZE);
-//    }
-//
-//    public byte[] readAudio(COMPRESS_TYPE compressType, int len){
-//        byte[] audio = readAudio(len);
-//        if (compressType == COMPRESS_TYPE.NONE)
-//            return audio;
-//        else
-//            if (new AudioBuffer(audio).isValidVoice())
-//                return audio;
-//            else
-//                return null;
-//    }
-
-    public int readAudio(byte[] buffer, int off, int len) {
-        if (off >= len)
-            throw new IndexOutOfBoundsException();
-        if (off < 0)
-            off = 0;
-        if (len > buffer.length)
-            len = buffer.length;
-        return driver.read(buffer, off, len);
-    }
-
-//    public byte[] record(long time){
-//        ByteBuffer buffer = new ByteBuffer();
-//        long ti = System.currentTimeMillis();
-//        byte[] au;
-//        while (System.currentTimeMillis() - ti < time){
-//            au = readAudio(COMPRESS_TYPE.OMEGA, 8);
-//            if (au != null) {
-//                buffer.addFrom(au);
-//            }
-//        }
-//        return buffer.toArray();
-//    }
-
-    /*public static void main(String[] args) throws LineUnavailableException {
-        Microphone micro = new Microphone(AudioQuality.NORMAL);
-        Speaker sp = new Speaker(micro.getFormat());
-        micro.open();sp.open();
-        FloatControl gain = sp.getControl(FloatControl.Type.MASTER_GAIN);
-        System.out.println("Minimum: "+gain.getMinimum());
-        System.out.println("Maximum: "+gain.getMaximum());
-        System.out.println("Units: "+gain.getUnits());
-        System.out.println("MinLabel: "+gain.getMinLabel());
-        System.out.println("MidLabel: "+gain.getMidLabel());
-        System.out.println("MaxLabel: "+gain.getMaxLabel());
-        System.out.println("Precision: "+gain.getPrecision());
-        System.out.println("UpdatePeriod: "+gain.getUpdatePeriod());
-        System.out.println("Value: "+gain.getValue());
-        try {
-            sp.getControl(FloatControl.Type.AUX_RETURN);
-        } catch (IllegalArgumentException e) {
-            System.out.println("IllegalArgument");
+        if (isListenerAlive()) {
+            listener.interrupt();
+            listener = null;
+            return true;
+        } else {
+            return false;
         }
-    }*/
+    }
+
+    private MicrophoneListener createListener() {
+        return new MicrophoneListener(this);
+    }
 
     public void listen(MicrophoneEvent event) {
         listener.addEvent(event);
+    }
+
+    @Override
+    public synchronized boolean open() {
+        return super.open() && startListener();
+    }
+
+    @Override
+    public synchronized boolean close() {
+        return closeListener() && super.close();
     }
 
 }
