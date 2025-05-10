@@ -1,15 +1,12 @@
 package cl.estencia.labs.aucom.audio.device;
 
 import javax.sound.sampled.*;
-import javax.sound.sampled.FloatControl.Type;
-
-import static cl.estencia.labs.aucom.common.IOConstants.EOF;
 
 /**
  *
  * @author martin
  */
-public class Speaker extends AudioOutputDevice {
+public class Speaker extends StreamableAudioOutputDevice {
     public Speaker() {
         super();
     }

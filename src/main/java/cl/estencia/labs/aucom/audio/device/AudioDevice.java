@@ -4,8 +4,6 @@ import lombok.extern.java.Log;
 
 import javax.sound.sampled.*;
 
-import static cl.estencia.labs.aucom.common.AudioQuality.DEFAULT_QUALITY;
-
 /**
  *
  * @author martin
@@ -15,16 +13,15 @@ public abstract class AudioDevice<D extends Line, I extends Line.Info> {
     protected volatile D driver;
 
     public AudioDevice() {
-        this(DEFAULT_QUALITY);
-    }
-
-    public AudioDevice(AudioFormat quality) {
-        this.driver = initAudioDevice(quality);
+        this(null);
     }
 
     public AudioDevice(D driver) {
         this.driver = driver;
     }
+
+    protected abstract boolean setupDriver();
+    protected abstract void setupDriver(D driver);
 
     protected D initAudioDevice(AudioFormat audioFormat) {
         return initAudioDevice(getLineInfo(audioFormat));
@@ -51,20 +48,14 @@ public abstract class AudioDevice<D extends Line, I extends Line.Info> {
         return driver;
     }
 
-    public void setDriver(D driver){
-        close();
-        this.driver = driver;
-    }
-
     public I getDriverInfo() {
-        return (I) driver.getLineInfo();
+        return driver != null ? (I) driver.getLineInfo() : null;
     }
 
     public void setDriverInfo(I info) {
         close();
         driver = initAudioDevice(info);
     }
-
 
     public synchronized <C extends Control> C getControl(Control.Type type) {
         try {
@@ -80,7 +71,7 @@ public abstract class AudioDevice<D extends Line, I extends Line.Info> {
     public abstract boolean open();
 
     public synchronized boolean close() {
-        if (driver != null && driver.isOpen()) {
+        if (isOpen()) {
             driver.close();
             return true;
         }
@@ -95,6 +86,8 @@ public abstract class AudioDevice<D extends Line, I extends Line.Info> {
                 return closed;
             }
         }
+
         return open();
     }
+
 }

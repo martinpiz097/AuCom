@@ -5,11 +5,10 @@ import cl.estencia.labs.aucom.common.VolumeConverter;
 import javax.sound.sampled.AudioFormat;
 import javax.sound.sampled.DataLine;
 import javax.sound.sampled.FloatControl;
-import javax.sound.sampled.SourceDataLine;
 
 import static cl.estencia.labs.aucom.common.IOConstants.EOF;
 
-public abstract class AudioOutputDevice extends DataAudioDevice<SourceDataLine, DataLine.Info> {
+public abstract class AudioOutputDevice<D extends DataLine> extends DataAudioDevice<D, DataLine.Info> {
 
     protected final VolumeConverter volumeConverter;
 
@@ -23,7 +22,7 @@ public abstract class AudioOutputDevice extends DataAudioDevice<SourceDataLine, 
         this.volumeConverter = new VolumeConverter();
     }
 
-    public AudioOutputDevice(SourceDataLine driver) {
+    public AudioOutputDevice(D driver) {
         super(driver);
         this.volumeConverter = new VolumeConverter();
     }
@@ -45,17 +44,4 @@ public abstract class AudioOutputDevice extends DataAudioDevice<SourceDataLine, 
         }
     }
 
-    public void playAudio(byte[] audioBuff){
-        if(audioBuff == null)
-            return;
-        driver.write(audioBuff, 0, audioBuff.length);
-    }
-
-    public void playAudio(byte[] audioBuff, int len){
-        if (audioBuff == null)
-            return;
-        if (len > audioBuff.length)
-            len = audioBuff.length;
-        driver.write(audioBuff, 0, len);
-    }
 }

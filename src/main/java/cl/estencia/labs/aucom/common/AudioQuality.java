@@ -6,6 +6,7 @@
 package cl.estencia.labs.aucom.common;
 
 import javax.sound.sampled.AudioFormat;
+import javax.sound.sampled.AudioSystem;
 
 /**
  *
@@ -29,4 +30,10 @@ public class AudioQuality {
     public static final AudioFormat DEFAULT_QUALITY = new AudioFormat(
             AudioFormat.Encoding.PCM_SIGNED, 12288.0f, 8, 1, 1, 16000.0f, true);
     //16000.0f, 8, 1, true, true);
+
+    public static final AudioFormat DEFAULT_CLIP_FORMAT = new AudioFormat(
+            AudioFormat.Encoding.PCM_SIGNED,
+            AudioSystem.NOT_SPECIFIED,
+            16, 2, 4,
+            AudioSystem.NOT_SPECIFIED, true);
 }

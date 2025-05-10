@@ -9,39 +9,69 @@ import static cl.estencia.labs.aucom.common.AudioQuality.DEFAULT_QUALITY;
 @Log
 public abstract class DataAudioDevice<D extends DataLine, I extends DataLine.Info>
         extends AudioDevice<D, I> {
+
+    protected volatile AudioFormat audioFormat;
+
     public DataAudioDevice() {
         super();
     }
 
     public DataAudioDevice(AudioFormat quality) {
-        super(quality);
+        this();
+        this.audioFormat = quality;
     }
 
     public DataAudioDevice(D driver) {
         super(driver);
+        this.audioFormat = driver.getFormat();
+    }
+
+    @Override
+    protected boolean setupDriver() {
+        if (audioFormat != null) {
+            setupDriver(initAudioDevice(audioFormat));
+        }
+        return false;
+    }
+
+    @Override
+    protected void setupDriver(D driver) {
+        close();
+        this.driver = driver;
+        this.audioFormat = driver.getFormat();
+    }
+
+    protected AudioFormat getDefaultFormat() {
+        return DEFAULT_QUALITY;
+    }
+
+    public boolean isRunning() {
+        return super.isOpen() && driver.isRunning();
     }
 
     public AudioFormat getAudioFormat() {
-        return driver.getFormat();
+        return audioFormat;
     }
 
     public void setAudioFormat(AudioFormat format) {
-        initAudioDevice(format);
+        this.audioFormat = format;
+        setupDriver();
     }
 
+    @Override
     public synchronized boolean open() {
-        AudioFormat openFormat;
-        if (driver != null) {
-            if (driver.isOpen()) {
-                driver.close();
-            }
-            AudioFormat driverFormat = driver.getFormat();
-            openFormat = driverFormat != null ? driverFormat : DEFAULT_QUALITY;
-        } else {
-            openFormat = DEFAULT_QUALITY;
+        AudioFormat openFormat = audioFormat != null
+                ? audioFormat : getDefaultFormat();
+
+        return open(openFormat);
+    }
+
+    public boolean open(AudioFormat audioFormat) {
+        if (isOpen() || audioFormat == null) {
+            return false;
         }
 
-        driver = initAudioDevice(openFormat);
+        driver = initAudioDevice(audioFormat);
         if (driver != null) {
             try {
                 driver.open();
@@ -57,4 +87,14 @@ public abstract class DataAudioDevice<D extends DataLine, I extends DataLine.Inf
         return false;
     }
 
+    public boolean reopen(AudioFormat audioFormat) {
+        boolean closed;
+        if (isOpen()) {
+            closed = close();
+            if (!closed) {
+                return closed;
+            }
+        }
+        return open(audioFormat);
+    }
 }
