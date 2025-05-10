@@ -5,7 +5,7 @@ import javax.sound.sampled.AudioInputStream;
 import javax.sound.sampled.DataLine;
 import javax.sound.sampled.TargetDataLine;
 
-import static cl.estencia.labs.aucom.audio.AudioInfo.BUFF_SIZE;
+import static cl.estencia.labs.aucom.common.IOConstants.DEFAULT_BUFF_SIZE;
 
 public abstract class AudioInputDevice extends DataAudioDevice<TargetDataLine, DataLine.Info> {
 
@@ -26,7 +26,7 @@ public abstract class AudioInputDevice extends DataAudioDevice<TargetDataLine, D
     }
 
     public byte[] readAudio() {
-        return readAudio(BUFF_SIZE);
+        return readAudio(DEFAULT_BUFF_SIZE);
     }
 
     public byte[] readAudio(int len) {

@@ -4,7 +4,7 @@ import lombok.extern.java.Log;
 
 import javax.sound.sampled.*;
 
-import static cl.estencia.labs.aucom.audio.AudioQuality.DEFAULT_QUALITY;
+import static cl.estencia.labs.aucom.common.AudioQuality.DEFAULT_QUALITY;
 
 @Log
 public abstract class DataAudioDevice<D extends DataLine, I extends DataLine.Info>
