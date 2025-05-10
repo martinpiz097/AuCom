@@ -66,19 +66,15 @@ public abstract class AudioDevice<D extends Line, I extends Line.Info> {
     }
 
 
-    public synchronized Control getControl(Control.Type type) {
+    public synchronized <C extends Control> C getControl(Control.Type type) {
         try {
-            return driver.getControl(type);
+            return (C) driver.getControl(type);
         } catch (IllegalArgumentException e) {
             log.severe("Error on getControl ("
                     +e.getClass().getSimpleName()
                     +"): " + e.getMessage());
             return null;
         }
-    }
-
-    public synchronized FloatControl getFloatControl(FloatControl.Type type) {
-        return (FloatControl) getControl(type);
     }
 
     public abstract boolean open();
