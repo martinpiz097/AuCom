@@ -4,3 +4,4 @@
 /build/
 target/
 src/main/java/cl/estencia/labs/aucom/testing
+src/test/java/cl/estencia/labs/aucom/internal
