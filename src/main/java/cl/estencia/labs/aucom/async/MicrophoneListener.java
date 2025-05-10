@@ -25,7 +25,6 @@ public class MicrophoneListener extends Thread {
     @Override
     public void run() {
         try {
-            byte[] audioBuffer;
             log.info("MicrophoneListener started!");
             while (microphone.isOpen()) {
                 while (listEvents.isEmpty()) {
@@ -35,10 +34,8 @@ public class MicrophoneListener extends Thread {
                         e.printStackTrace();
                     }
                 }
-                audioBuffer = microphone.readAudio();
-                for (MicrophoneEvent event : listEvents) {
-                    event.onAudioRead(audioBuffer);
-                }
+                listEvents.forEach(event ->
+                        event.onAudioRead(microphone.readAudio()));
             }
         } catch (Exception e) {
 
