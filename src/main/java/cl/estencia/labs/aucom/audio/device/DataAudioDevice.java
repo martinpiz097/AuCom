@@ -27,18 +27,22 @@ public abstract class DataAudioDevice<D extends DataLine, I extends DataLine.Inf
     }
 
     @Override
-    protected boolean setupDriver() {
+    protected boolean setupDriver(AudioFormat audioFormat) {
         if (audioFormat != null) {
             setupDriver(initAudioDevice(audioFormat));
+            return setupDriver(driver);
         }
         return false;
     }
 
     @Override
-    protected void setupDriver(D driver) {
-        close();
+    protected boolean setupDriver(D driver) {
+        if (!close()) {
+            return false;
+        }
         this.driver = driver;
         this.audioFormat = driver.getFormat();
+        return true;
     }
 
     protected AudioFormat getDefaultFormat() {
@@ -54,15 +58,12 @@ public abstract class DataAudioDevice<D extends DataLine, I extends DataLine.Inf
     }
 
     public void setAudioFormat(AudioFormat format) {
-        this.audioFormat = format;
-        setupDriver();
+        setupDriver(format);
     }
 
     @Override
     public synchronized boolean open() {
-        AudioFormat openFormat = audioFormat != null
-                ? audioFormat : getDefaultFormat();
-
+        AudioFormat openFormat = audioFormat != null ? audioFormat : getDefaultFormat();
         return open(openFormat);
     }
 

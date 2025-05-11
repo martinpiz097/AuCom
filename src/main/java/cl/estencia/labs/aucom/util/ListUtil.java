@@ -1,4 +1,4 @@
-package cl.estencia.labs.aucom.common;
+package cl.estencia.labs.aucom.util;
 
 import java.util.*;
 import java.util.stream.Stream;

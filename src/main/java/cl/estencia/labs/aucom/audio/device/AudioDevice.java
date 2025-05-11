@@ -20,8 +20,8 @@ public abstract class AudioDevice<D extends Line, I extends Line.Info> {
         this.driver = driver;
     }
 
-    protected abstract boolean setupDriver();
-    protected abstract void setupDriver(D driver);
+    protected abstract boolean setupDriver(AudioFormat audioFormat);
+    protected abstract boolean setupDriver(D driver);
 
     protected D initAudioDevice(AudioFormat audioFormat) {
         return initAudioDevice(getLineInfo(audioFormat));
@@ -46,6 +46,10 @@ public abstract class AudioDevice<D extends Line, I extends Line.Info> {
 
     public D getDriver() {
         return driver;
+    }
+
+    public void setDriver(D driver) {
+        this.driver = driver;
     }
 
     public I getDriverInfo() {
@@ -79,12 +83,8 @@ public abstract class AudioDevice<D extends Line, I extends Line.Info> {
     }
 
     public boolean reopen() {
-        boolean closed;
-        if (isOpen()) {
-            closed = close();
-            if (!closed) {
-                return closed;
-            }
+        if (isOpen() && !close()) {
+            return false;
         }
 
         return open();

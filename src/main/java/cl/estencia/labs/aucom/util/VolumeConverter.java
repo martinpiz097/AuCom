@@ -1,4 +1,4 @@
-package cl.estencia.labs.aucom.common;
+package cl.estencia.labs.aucom.util;
 
 import javax.sound.sampled.FloatControl;
 
@@ -22,11 +22,11 @@ public class VolumeConverter {
     }
 
     public float volumeToDataLineVolume(float volume) {
-        return volumeToDataLineVolume(volume, MIN_VOL, MAX_VOL);
+        return volumeToDataLineVolume(volume, DEFAULT_MIN_LINE_VOL, DEFAULT_MAX_LINE_VOL);
     }
 
     public float dataLineVolumeToVolume(float volume) {
-        return dataLineVolumeToVolume(volume, MIN_VOL, MAX_VOL);
+        return dataLineVolumeToVolume(volume, DEFAULT_MIN_LINE_VOL, DEFAULT_MAX_LINE_VOL);
     }
 
     public float volumeToDataLineVolume(float volume, FloatControl control) {

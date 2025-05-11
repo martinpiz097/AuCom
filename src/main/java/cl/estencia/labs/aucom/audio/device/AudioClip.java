@@ -37,7 +37,7 @@ public class AudioClip extends AudioOutputDevice<Clip> {
     }
 
     @Override
-    protected boolean setupDriver() {
+    protected boolean setupDriver(AudioFormat audioFormat) {
         return setupDriver(audioInputStream);
     }
 
@@ -76,7 +76,7 @@ public class AudioClip extends AudioOutputDevice<Clip> {
         if (audioInputStream == null || isRunning() || isOpen()) {
             return false;
         }
-        return setupDriver();
+        return setupDriver(audioFormat);
     }
 
     public boolean open(AudioInputStream audioInputStream) {
@@ -103,7 +103,7 @@ public class AudioClip extends AudioOutputDevice<Clip> {
             return false;
         }
 
-        driver.loop(DEFAULT_LOOP_VALUE);
+        driver.start();
         return true;
     }
 
