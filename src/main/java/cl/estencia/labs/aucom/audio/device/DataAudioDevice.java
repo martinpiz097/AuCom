@@ -93,7 +93,7 @@ public abstract class DataAudioDevice<D extends DataLine, I extends DataLine.Inf
         if (isOpen()) {
             closed = close();
             if (!closed) {
-                return closed;
+                return false;
             }
         }
         return open(audioFormat);

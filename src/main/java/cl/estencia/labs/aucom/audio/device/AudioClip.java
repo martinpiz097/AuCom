@@ -32,7 +32,7 @@ public class AudioClip extends AudioOutputDevice<Clip> {
         open(audioInputStream);
     }
 
-    public AudioClip(AudioDecoder audioDecoder) throws UnsupportedAudioFileException, IOException {
+    public AudioClip(AudioDecoder audioDecoder) {
         this(audioDecoder.getDecodedStream());
     }
 
