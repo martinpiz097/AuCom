@@ -2,6 +2,11 @@ package cl.estencia.labs.aucom.audio.device;
 
 import javax.sound.sampled.AudioFormat;
 import javax.sound.sampled.SourceDataLine;
+import java.io.IOException;
+import java.io.InputStream;
+import java.nio.ByteBuffer;
+
+import static cl.estencia.labs.aucom.common.IOConstants.*;
 
 public abstract class StreamableAudioOutputDevice extends AudioOutputDevice<SourceDataLine> {
 
@@ -20,14 +25,43 @@ public abstract class StreamableAudioOutputDevice extends AudioOutputDevice<Sour
     public void playAudio(byte[] audioBuff){
         if(audioBuff == null)
             return;
+
         playAudio(audioBuff, audioBuff.length);
     }
 
     public void playAudio(byte[] audioBuff, int len){
         if (audioBuff == null)
             return;
-        if (len > audioBuff.length)
-            len = audioBuff.length;
-        driver.write(audioBuff, 0, len);
+
+        driver.write(audioBuff, OFFSET, Math.min(len, audioBuff.length));
+    }
+
+    public void playAudio(ByteBuffer audioBuffer) {
+        if (audioBuffer == null)
+            return;
+
+        playAudio(audioBuffer.array(), audioBuffer.capacity());
+    }
+
+    public void playAudio(ByteBuffer audioBuffer, int len) {
+        if (audioBuffer == null)
+            return;
+
+        playAudio(audioBuffer.array(), len);
+    }
+
+    public void playAudioStream(InputStream inputStream) throws IOException {
+        playAudioStream(inputStream, DEFAULT_BUFF_SIZE);
+    }
+
+    public void playAudioStream(InputStream inputStream, int bufferSize) throws IOException {
+        playAudioStream(inputStream, new byte[bufferSize]);
+    }
+
+    public void playAudioStream(InputStream inputStream, byte[] audioBuffer) throws IOException {
+        int read;
+        while ((read = inputStream.read(audioBuffer)) != EOF) {
+            playAudio(audioBuffer, read);
+        }
     }
 }

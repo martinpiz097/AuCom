@@ -49,7 +49,7 @@ public abstract class AudioDecoder {
         return decodedStream.getFormat();
     }
 
-    protected abstract AudioFormat convertToPcmFormat(AudioFormat baseFormat);
+    public abstract AudioFormat convertToPcmFormat(AudioFormat baseFormat);
 
     public boolean tryCloseCurrentStream(AudioInputStream audioInputStream) {
         try {
