@@ -1,6 +1,6 @@
 package cl.estencia.labs.aucom.io;
 
-import cl.estencia.labs.aucom.util.DecoderFormatUtil;
+import cl.estencia.labs.aucom.util.AudioDecodingUtil;
 import lombok.Data;
 import lombok.extern.java.Log;
 
@@ -15,25 +15,25 @@ import java.io.IOException;
 @Log
 public abstract class AudioDecoder {
     protected final File source;
-    protected final DecoderFormatUtil decoderFormatUtil;
+    protected final AudioDecodingUtil audioDecodingUtil;
 
     protected volatile AudioInputStream decodedStream;
 
     public AudioDecoder(String path) throws UnsupportedAudioFileException, IOException {
-        this(new File(path), new DecoderFormatUtil());
+        this(new File(path), new AudioDecodingUtil());
     }
 
     public AudioDecoder(File file) throws UnsupportedAudioFileException, IOException {
-        this(file, new DecoderFormatUtil());
+        this(file, new AudioDecodingUtil());
     }
 
-    public AudioDecoder(String path, DecoderFormatUtil decoderFormatUtil) throws UnsupportedAudioFileException, IOException {
-        this(new File(path), decoderFormatUtil);
+    public AudioDecoder(String path, AudioDecodingUtil audioDecodingUtil) throws UnsupportedAudioFileException, IOException {
+        this(new File(path), audioDecodingUtil);
     }
 
-    public AudioDecoder(File file, DecoderFormatUtil decoderFormatUtil) throws UnsupportedAudioFileException, IOException {
+    public AudioDecoder(File file, AudioDecodingUtil audioDecodingUtil) throws UnsupportedAudioFileException, IOException {
         this.source = file;
-        this.decoderFormatUtil = decoderFormatUtil;
+        this.audioDecodingUtil = audioDecodingUtil;
         this.decodedStream = buildDecodedAudioStream();
     }
 
@@ -73,7 +73,7 @@ public abstract class AudioDecoder {
         AudioFormat baseFormat = sourceStream.getFormat();
         AudioFormat pcmFormat = convertToPcmFormat(baseFormat);
 
-        return decoderFormatUtil.decodeToPcm(sourceStream, pcmFormat);
+        return audioDecodingUtil.decodeToPcm(sourceStream, pcmFormat);
     }
 
     public synchronized AudioInputStream getDecodedStream() {

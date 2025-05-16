@@ -1,7 +1,7 @@
-package cl.estencia.labs.aucom.audio.device;
+package cl.estencia.labs.aucom.core.device.input;
 
 import lombok.extern.java.Log;
-import cl.estencia.labs.aucom.async.MicrophoneListener;
+import cl.estencia.labs.aucom.event.listener.MicrophoneListener;
 import cl.estencia.labs.aucom.event.MicrophoneEvent;
 
 import javax.sound.sampled.*;

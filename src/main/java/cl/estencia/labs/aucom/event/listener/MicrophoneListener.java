@@ -1,9 +1,9 @@
-package cl.estencia.labs.aucom.async;
+package cl.estencia.labs.aucom.event.listener;
 
-import cl.estencia.labs.aucom.audio.device.AudioInputDevice;
+import cl.estencia.labs.aucom.core.device.input.AudioInputDevice;
 import lombok.extern.java.Log;
 import cl.estencia.labs.aucom.event.MicrophoneEvent;
-import cl.estencia.labs.aucom.audio.device.Microphone;
+import cl.estencia.labs.aucom.core.device.input.Microphone;
 
 import java.util.ArrayList;
 import java.util.List;

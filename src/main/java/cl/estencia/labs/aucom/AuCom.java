@@ -1,7 +1,7 @@
 package cl.estencia.labs.aucom;
 
-import cl.estencia.labs.aucom.audio.device.Microphone;
-import cl.estencia.labs.aucom.audio.device.Speaker;
+import cl.estencia.labs.aucom.core.device.input.Microphone;
+import cl.estencia.labs.aucom.core.device.output.Speaker;
 
 public class AuCom {
 

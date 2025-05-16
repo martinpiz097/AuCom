@@ -1,4 +1,4 @@
-package cl.estencia.labs.aucom.audio.device;
+package cl.estencia.labs.aucom.core.device.output;
 
 import javax.sound.sampled.*;
 

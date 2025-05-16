@@ -1,5 +1,6 @@
-package cl.estencia.labs.aucom.audio.device;
+package cl.estencia.labs.aucom.core.device.output;
 
+import cl.estencia.labs.aucom.core.device.DataAudioDevice;
 import cl.estencia.labs.aucom.util.VolumeConverter;
 
 import javax.sound.sampled.AudioFormat;

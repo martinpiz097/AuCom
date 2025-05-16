@@ -10,7 +10,7 @@ import java.net.URL;
 
 import static cl.estencia.labs.aucom.common.AudioConstants.DEFAULT_MAX_VOL;
 
-public class DecoderFormatUtil {
+public class AudioDecodingUtil {
 
     public static final float DEFAULT_VOLUME = DEFAULT_MAX_VOL;
 

@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package cl.estencia.labs.aucom.audio;
+package cl.estencia.labs.aucom.core;
 
 import javax.sound.sampled.*;
 import java.lang.reflect.Constructor;
@@ -248,5 +248,7 @@ public class DigitalAudioSystem {
     public List<Mixer> getMixers() {
         return listMixers;
     }
+
+
 
 }

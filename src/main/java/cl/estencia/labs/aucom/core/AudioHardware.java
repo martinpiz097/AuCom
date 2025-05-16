@@ -1,4 +1,4 @@
-package cl.estencia.labs.aucom.audio;
+package cl.estencia.labs.aucom.core;
 
 import cl.estencia.labs.aucom.util.ListUtil;
 import cl.estencia.labs.aucom.util.VolumeConverter;

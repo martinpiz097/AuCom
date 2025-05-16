@@ -1,5 +1,6 @@
-package cl.estencia.labs.aucom.audio.device;
+package cl.estencia.labs.aucom.core.device;
 
+import cl.estencia.labs.aucom.core.device.output.AudioOutputDevice;
 import cl.estencia.labs.aucom.io.AudioDecoder;
 import lombok.extern.java.Log;
 
