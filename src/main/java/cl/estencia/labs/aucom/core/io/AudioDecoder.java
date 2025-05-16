@@ -1,6 +1,6 @@
-package cl.estencia.labs.aucom.io;
+package cl.estencia.labs.aucom.core.io;
 
-import cl.estencia.labs.aucom.util.AudioDecodingUtil;
+import cl.estencia.labs.aucom.core.util.AudioDecodingUtil;
 import lombok.Data;
 import lombok.extern.java.Log;
 

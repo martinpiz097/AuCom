@@ -1,4 +1,4 @@
-package cl.estencia.labs.aucom.util;
+package cl.estencia.labs.aucom.core.util;
 
 import javax.sound.sampled.FloatControl;
 

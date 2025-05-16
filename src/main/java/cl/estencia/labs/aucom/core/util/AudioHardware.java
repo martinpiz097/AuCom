@@ -1,7 +1,4 @@
-package cl.estencia.labs.aucom.core;
-
-import cl.estencia.labs.aucom.util.ListUtil;
-import cl.estencia.labs.aucom.util.VolumeConverter;
+package cl.estencia.labs.aucom.core.util;
 
 import javax.sound.sampled.*;
 import java.util.*;

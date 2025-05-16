@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package cl.estencia.labs.aucom.core;
+package cl.estencia.labs.aucom.core.util;
 
 import javax.sound.sampled.*;
 import java.lang.reflect.Constructor;
