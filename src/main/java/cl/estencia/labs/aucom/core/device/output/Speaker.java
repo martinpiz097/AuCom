@@ -19,6 +19,10 @@ public class Speaker extends StreamableAudioOutputDevice {
         super(driver);
     }
 
+    public Speaker(AudioInputStream audioInputStream) {
+        this(audioInputStream != null ? audioInputStream.getFormat() : null);
+    }
+
     @Override
     protected synchronized DataLine.Info getLineInfo(AudioFormat format) {
         return new DataLine.Info(SourceDataLine.class, format);
